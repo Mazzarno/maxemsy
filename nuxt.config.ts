@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import { useProjectsStore } from './store/projects';
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
@@ -68,5 +70,13 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
     },
   },
-  modules: ["@nuxtjs/tailwindcss"],
+  nitro: { preset: "netlify-edge" },
+  modules: ["@nuxtjs/tailwindcss", '@vueuse/nuxt', "nuxt-swiper", "@pinia/nuxt"],
+    swiper: {
+    // Swiper options
+    //----------------------
+    prefix: 'Swiper',
+     styleLang: 'css',
+     modules: ['navigation',"mousewheel","autoplay","effect-creative","free-mode", "grid"], // all modules are imported by default
+  }
 });
