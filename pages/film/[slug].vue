@@ -10,7 +10,7 @@
             class="flex layer title-font font-medium items-center text-white mb-4 md:mb-0"
           >
             <h1
-              class="text-xl hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
+              class="text-xl hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
               data-text="Maxime CARO"
             >
               <span
@@ -19,22 +19,31 @@
               >
             </h1>
           </NuxtLink>
-          <h1
-            class="text-lg text-white glitch"
-            :data-text="currentProject?.brand"
-          >
-            <span> {{ currentProject?.brand }}</span>
-          </h1>
+          <div class="flex mt-5">
+            <h1
+              class="text-xl text-white glitch hero"
+              :data-text="currentProject?.brand"
+            >
+              <span> {{ currentProject?.brand }}</span>
+            </h1>
+            <h2
+              v-if="currentProject?.name"
+              class="text-xl text-white glitch hero"
+              :data-text="'&nbsp-&nbsp' + currentProject?.name"
+            >
+              <span>{{ "&nbsp-&nbsp" + currentProject?.name }}</span>
+            </h2>
+          </div>
           <h2
-            class="text-lg text-white glitch"
-            :data-text="currentProject?.name"
+            class="text-lg text-white glitch hero"
+            :data-text="currentProject?.production"
           >
-            <span>{{ currentProject?.name }}</span>
-          </h2>
-          <h2 class="text-lg text-white glitch">
             <span> {{ currentProject?.production }}</span>
           </h2>
-          <h2 class="text-lg text-white glitch">
+          <h2
+            class="text-lg text-white glitch hero"
+            :data-text="currentProject?.crew"
+          >
             <span> {{ currentProject?.crew }}</span>
           </h2>
         </div>

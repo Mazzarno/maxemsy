@@ -58,10 +58,12 @@ const navigateToWork = (index) => {
         v-for="(work, index) in works.slice(0, 20)"
         :key="index"
         class="snap-center relative flex items-center justify-center h-screen overflow-hidden"
-        @click="navigateToWork(index)"
       >
         <div class="z-40 absolute top-1/2 left-1/4 transform -translate-y-1/2">
-          <div class="cursor-pointer hover:animate-pulse text-white">
+          <div
+            @click="navigateToWork(index)"
+            class="flex cursor-pointer hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
+          >
             <h1
               class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
               :data-text="work.brand"

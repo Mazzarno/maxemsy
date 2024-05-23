@@ -6,10 +6,10 @@
       >
         <NuxtLink
           to="/"
-          class="flex layer title-font font-medium items-center text-white mb-4 md:mb-0"
+          class="ml-3 flex layer title-font font-medium items-center text-white mb-4 md:mb-0 hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
         >
           <h2
-            class="ml-3 text-xl hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
+            class="text-xl hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
             data-text="Maxime CARO"
           >
             <span
@@ -22,29 +22,29 @@
           class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center"
         >
           <a
-            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse"
+            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
           >
             <span
-              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
+              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
               data-text="Work"
               >Work</span
             ></a
           >
           <a
-            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse"
+            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
           >
             <span
-              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
+              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
               data-text="Commercial"
               >Commercial</span
             ></a
           >
           <a
-            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse"
+            class="mr-10 hover:text-white hero glitch layers transition ease-in-out delay-150 hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
             data-text="Music Vidéo"
           >
             <span
-              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
+              class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
               >Music Video</span
             ></a
           >
