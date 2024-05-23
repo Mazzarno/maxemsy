@@ -70,6 +70,7 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
     },
   },
+
   nitro: { preset: "netlify-edge" },
   modules: ["@nuxtjs/tailwindcss", '@vueuse/nuxt', "nuxt-swiper", "@pinia/nuxt"],
     swiper: {
