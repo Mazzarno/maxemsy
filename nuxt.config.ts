@@ -1,10 +1,9 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
-import { useProjectsStore } from './store/projects';
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
-  app: { pageTransition: { name: 'page', mode: 'out-in' },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       titleTemplate: "Maxime Caro",
       htmlAttrs: {

@@ -68,6 +68,9 @@
 <script setup>
 definePageMeta({
   layout: false,
+  pageTransition: {
+    name: "page",
+  },
 });
 import { useRoute } from "vue-router";
 import { useProjectsStore } from "@/store/projects";
