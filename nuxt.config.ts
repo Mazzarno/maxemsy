@@ -4,7 +4,7 @@ import { useProjectsStore } from './store/projects';
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
-  app: {
+  app: { pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       titleTemplate: "Maxime Caro",
       htmlAttrs: {
@@ -72,7 +72,7 @@ export default defineNuxtConfig({
   },
 
   nitro: { preset: "netlify-edge" },
-  modules: ["@nuxtjs/tailwindcss", '@vueuse/nuxt', "nuxt-swiper", "@pinia/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", '@vueuse/nuxt', "nuxt-swiper", "@pinia/nuxt", "@nuxtjs/device"],
     swiper: {
     // Swiper options
     //----------------------

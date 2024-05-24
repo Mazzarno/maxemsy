@@ -42,7 +42,7 @@ const navigateToWork = (index) => {
       :spaceBetween="0"
       :rewind="true"
       :mousewheel="{
-        sensitivity: 0.3,
+        sensitivity: 1,
       }"
       :freeMode="{
         sticky: true,
@@ -92,7 +92,7 @@ const navigateToWork = (index) => {
           </h2>
         </div>
         <video
-          class="absolute z-10 w-auto min-w-full min-h-full max-w-none aspect-video"
+          class="no_controls absolute z-10 w-auto min-w-full min-h-full max-w-none aspect-video"
           muted
           controls="false"
           :src="work.preview"
@@ -105,3 +105,8 @@ const navigateToWork = (index) => {
     </swiper>
   </div>
 </template>
+<style scoped>
+::-webkit-media-controls {
+  display: none;
+}
+</style>
