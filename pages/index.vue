@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { useProjectsStore } from "@/store/projects";
-const router = useRouter();
+const { $gsap } = useNuxtApp()
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
-const commercials = projectsStore.projects.commercials.data;
-const musicVideos = projectsStore.projects.musicVideos.data;
-const progress = ref(0);
+const progress = ref();
 const timer = ref("");
 const onAutoplayTimeLeft = (
   swiper: any,
@@ -14,12 +11,36 @@ const onAutoplayTimeLeft = (
   percentage: number
 ) => {
   progress.value = 100 - percentage * 100;
-};
-const navigateToWork = (index) => {
-  router.push({
-    path: `/film/${index}`,
-  });
-};
+}; 
+onMounted(() => {
+  /*
+    var tlText = $gsap.timeline({
+      scrollTrigger: {
+      },
+    });
+    tlText
+      .fromTo(
+        "#brand",
+        { x: 0, y: 100, duration: 0, opacity: 0,  },
+        { x: 0, y: 0, duration: 1, opacity: 1, }
+      )
+      .fromTo(
+        "#name",
+        { x: 0, y: 100, duration: 0, opacity: 0 },
+        { x: 0, y: 0, duration: 1, opacity: 1 }
+    )
+        .fromTo(
+        "#production",
+        { x: 0, y: 100, duration: 0, opacity: 0 },
+        { x: 0, y: 0, duration: 1, opacity: 1 }
+      )
+      .fromTo(
+        "#crew",
+        { x: 0, y: 100, duration: 0, opacity: 0 },
+        { x: 0, y: 0, duration: 1, opacity: 1 }
+      )
+   */
+});
 </script>
 <template>
   <div class="relative">
@@ -35,10 +56,13 @@ const navigateToWork = (index) => {
         SwiperMousewheel,
         SwiperEffectCreative,
         SwiperFreeMode,
+        SwiperEffectCube
       ]"
       @autoplayTimeLeft="onAutoplayTimeLeft"
       :direction="'vertical'"
       :slidesPerView="1"
+      cssMode: true,
+      :effect="'cube'"
       :spaceBetween="0"
       :rewind="true"
       :mousewheel="{
@@ -60,38 +84,44 @@ const navigateToWork = (index) => {
         class="snap-center relative flex items-center justify-center h-screen overflow-hidden"
       >
         <div class="z-40 absolute top-1/2 left-1/4 transform -translate-y-1/2">
-          <div
-            @click="navigateToWork(index)"
-            class="flex cursor-pointer hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
-          >
-            <h1
-              class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
-              :data-text="work.brand"
+          <NuxtLink :to="'/film/' + index" >
+            <div
+              class="flex cursor-pointer hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
             >
-              <span>{{ work.brand }}</span>
-            </h1>
-            <h1
-              v-if="work.name"
-              class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
-              :data-text="'&nbsp-&nbsp' + work.name"
-            >
-              <span>{{ "&nbsp-&nbsp" + work.name }}</span>
-            </h1>
-          </div>
+              <h1
+                class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
+                :data-text="work.brand"
+                id="brand"
+              >
+                <span id="brand">{{ work.brand }}</span>
+              </h1>
+              <h1
+                v-if="work.name"
+                class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
+                :data-text="'&nbsp-&nbsp' + work.name"
+                id="name"
+              >
+                <span id="name">{{ "&nbsp-&nbsp" + work.name }}</span>
+              </h1>
+            </div>
+          </NuxtLink>
           <h2
             v-if="work.production"
-            class="text-white z-50 text-2xl layers indextext text-left"
+            class="text-slate-200 z-50 text-2xl layers indextext text-left"
+            id="production"
           >
             {{ work.production }}
           </h2>
           <h2
             v-if="work.crew"
-            class="text-white z-50 text-2xl layers indextext text-left"
+            class="text-slate-200 z-50 text-2xl layers indextext text-left"
+              id="crew"
           >
             {{ work.crew }}
           </h2>
         </div>
         <video
+        id="video"
           class="no_controls absolute z-10 w-auto min-w-full min-h-full max-w-none aspect-video"
           muted
           controls="false"

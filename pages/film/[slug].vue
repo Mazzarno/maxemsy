@@ -19,33 +19,37 @@
               >
             </h1>
           </NuxtLink>
-          <div class="flex mt-5">
-            <h1
-              class="text-xl text-white glitch hero"
-              :data-text="currentProject?.brand"
-            >
-              <span> {{ currentProject?.brand }}</span>
-            </h1>
-            <h2
-              v-if="currentProject?.name"
-              class="text-xl text-white glitch hero"
-              :data-text="'&nbsp-&nbsp' + currentProject?.name"
-            >
-              <span>{{ "&nbsp-&nbsp" + currentProject?.name }}</span>
-            </h2>
-          </div>
-          <h2
-            class="text-lg text-white glitch hero"
-            :data-text="currentProject?.production"
-          >
-            <span> {{ currentProject?.production }}</span>
-          </h2>
-          <h2
-            class="text-lg text-white glitch hero"
-            :data-text="currentProject?.crew"
-          >
-            <span> {{ currentProject?.crew }}</span>
-          </h2>
+          <transition name="fade">
+            <div v-show="showName">
+              <div class="flex mt-5">
+                <h1
+                  class="text-xl text-white glitch hero"
+                  :data-text="currentProject?.brand"
+                >
+                  <span> {{ currentProject?.brand }}</span>
+                </h1>
+                <h2
+                  v-if="currentProject?.name"
+                  class="text-xl text-white glitch hero"
+                  :data-text="'&nbsp-&nbsp' + currentProject?.name"
+                >
+                  <span>{{ "&nbsp-&nbsp" + currentProject?.name }}</span>
+                </h2>
+              </div>
+              <h2
+                class="text-lg text-white glitch hero"
+                :data-text="currentProject?.production"
+              >
+                <span> {{ currentProject?.production }}</span>
+              </h2>
+              <h2
+                class="text-lg text-white glitch hero"
+                :data-text="currentProject?.crew"
+              >
+                <span> {{ currentProject?.crew }}</span>
+              </h2>
+            </div>
+          </transition>
         </div>
       </div>
     </header>
@@ -66,20 +70,21 @@
   </div>
 </template>
 <script setup>
-definePageMeta({
-  layout: false,
-  pageTransition: {
-    name: "page",
-  },
-});
-import { useRoute } from "vue-router";
 import { useProjectsStore } from "@/store/projects";
-import { onMounted, ref } from "vue";
 
 const $route = useRoute();
 const projectsStore = useProjectsStore();
 const currentProject = ref(null);
+const showName = ref(true);
+let mouseTimeout;
 
+const handleMouseMove = () => {
+  showName.value = true;
+  clearTimeout(mouseTimeout);
+  mouseTimeout = setTimeout(() => {
+    showName.value = false;
+  }, 3000);
+};
 onMounted(() => {
   const index = $route.params.slug;
   const project = projectsStore.projects.works.data[index];
@@ -89,5 +94,11 @@ onMounted(() => {
   } else {
     // Handle project not found, maybe redirect to a 404 page
   }
+  window.addEventListener("mousemove", handleMouseMove);
+  handleMouseMove(); // Ensure footer is visible on initial load
+});
+onUnmounted(() => {
+  window.removeEventListener("mousemove", handleMouseMove);
 });
 </script>
+<style scoped></style>
