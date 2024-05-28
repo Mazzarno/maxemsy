@@ -4,60 +4,38 @@
       <div
         class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
-        <div class="relative ml-3">
-          <NuxtLink
-            to="/"
-            class="flex layer title-font font-medium items-center text-white mb-4 md:mb-0"
-          >
-            <h1
-              class="text-xl hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
-              data-text="Maxime CARO"
-            >
-              <span
-                class="transition ease-in-out delay-150 hover:animate-pulse hover:scale-110"
-                >Maxime CARO</span
-              >
-            </h1>
-          </NuxtLink>
+        <div class="relative">
           <transition name="fade">
             <div v-show="showName">
-              <div class="flex mt-5">
-                <h1
-                  class="text-xl text-white glitch hero"
+              <div class="flex mt-10">
+                <h2
+                  class="text-white glitch hero"
                   :data-text="currentProject?.brand"
                 >
-                  <span> {{ currentProject?.brand }}</span>
-                </h1>
-                <h2
+                  <span>{{ currentProject?.brand }}</span>
+                </h2>
+                <h3
                   v-if="currentProject?.name"
-                  class="text-xl text-white glitch hero"
+                  class="text-white glitch hero"
                   :data-text="'&nbsp-&nbsp' + currentProject?.name"
                 >
-                  <span>{{ "&nbsp-&nbsp" + currentProject?.name }}</span>
-                </h2>
+                  <span>{{ '&nbsp-&nbsp' + currentProject?.name }}</span>
+                </h3>
               </div>
-              <h2
-                class="text-lg text-white glitch hero"
-                :data-text="currentProject?.production"
-              >
-                <span> {{ currentProject?.production }}</span>
-              </h2>
-              <h2
-                class="text-lg text-white glitch hero"
-                :data-text="currentProject?.crew"
-              >
-                <span> {{ currentProject?.crew }}</span>
+              <h3 class="glitch hero" :data-text="currentProject?.production">
+                <span>{{ currentProject?.production }}</span>
+              </h3>
+              <h2 class="glitch hero" :data-text="currentProject?.crew">
+                <span>{{ currentProject?.crew }}</span>
               </h2>
             </div>
           </transition>
         </div>
       </div>
     </header>
-    <div
-      class="relative flex items-center justify-center h-screen overflow-hidden"
-    >
+    <div class="aspect-video w-screen h-screen">
       <video
-        class="absolute z-10 w-auto min-w-full min-h-full max-w-none aspect-video"
+        class="w-full h-full"
         muted
         controls
         autoplay
@@ -70,35 +48,38 @@
   </div>
 </template>
 <script setup>
-import { useProjectsStore } from "@/store/projects";
-
-const $route = useRoute();
-const projectsStore = useProjectsStore();
-const currentProject = ref(null);
-const showName = ref(true);
-let mouseTimeout;
+import { useProjectsStore } from '@/store/projects'
+const $route = useRoute()
+const projectsStore = useProjectsStore()
+const currentProject = ref(null)
+const showName = ref(true)
+let mouseTimeout
 
 const handleMouseMove = () => {
-  showName.value = true;
-  clearTimeout(mouseTimeout);
+  showName.value = true
+  clearTimeout(mouseTimeout)
   mouseTimeout = setTimeout(() => {
-    showName.value = false;
-  }, 3000);
-};
+    showName.value = false
+  }, 3000)
+}
 onMounted(() => {
-  const index = $route.params.slug;
-  const project = projectsStore.projects.works.data[index];
+  const index = $route.params.slug
+  const project = projectsStore.projects.works.data[index]
   if (project) {
-    currentProject.value = project;
-    projectsStore.setCurrentProject(project);
+    currentProject.value = project
+    projectsStore.setCurrentProject(project)
   } else {
     // Handle project not found, maybe redirect to a 404 page
   }
-  window.addEventListener("mousemove", handleMouseMove);
-  handleMouseMove(); // Ensure footer is visible on initial load
-});
+  window.addEventListener('mousemove', handleMouseMove)
+  handleMouseMove() // Ensure footer is visible on initial load
+})
 onUnmounted(() => {
-  window.removeEventListener("mousemove", handleMouseMove);
-});
+  window.removeEventListener('mousemove', handleMouseMove)
+})
 </script>
-<style scoped></style>
+<style scoped>
+::-webkit-media-controls {
+  display: block;
+}
+</style>

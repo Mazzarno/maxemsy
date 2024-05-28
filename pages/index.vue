@@ -4,7 +4,7 @@ const { $gsap } = useNuxtApp()
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
 const progress = ref();
-const timer = ref("");
+const timer = ref();
 const onAutoplayTimeLeft = (
   swiper: any,
   timeLeft: number,
@@ -86,10 +86,10 @@ onMounted(() => {
         <div class="z-40 absolute top-1/2 left-1/4 transform -translate-y-1/2">
           <NuxtLink :to="'/film/' + index" >
             <div
-              class="flex cursor-pointer hover:animate-pulse text-white hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
+              class="flex cursor-pointer hover:animate-pulse hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
             >
               <h1
-                class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
+                class="z-50 hero glitch layers"
                 :data-text="work.brand"
                 id="brand"
               >
@@ -97,7 +97,7 @@ onMounted(() => {
               </h1>
               <h1
                 v-if="work.name"
-                class="text-white z-50 text-4xl hero glitch layers transition ease-in-out delay-150 text-left group-hover:underline-offset-0 group-hover:animate-pulse"
+                class=" z-50 hero glitch layers"
                 :data-text="'&nbsp-&nbsp' + work.name"
                 id="name"
               >
@@ -107,14 +107,14 @@ onMounted(() => {
           </NuxtLink>
           <h2
             v-if="work.production"
-            class="text-slate-200 z-50 text-2xl layers indextext text-left"
+            class="layers indextext"
             id="production"
           >
             {{ work.production }}
           </h2>
           <h2
             v-if="work.crew"
-            class="text-slate-200 z-50 text-2xl layers indextext text-left"
+            class="z-50 layers indextext"
               id="crew"
           >
             {{ work.crew }}
@@ -122,7 +122,7 @@ onMounted(() => {
         </div>
         <video
         id="video"
-          class="no_controls absolute z-10 w-auto min-w-full min-h-full max-w-none aspect-video"
+          class="no_controls absolute z-10 w-auto min-w-screen min-h-screen max-w-none aspect-video"
           muted
           controls="false"
           :src="work.preview"
