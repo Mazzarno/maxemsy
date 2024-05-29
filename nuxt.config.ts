@@ -1,17 +1,24 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
+  nitro: { preset: "netlify-edge" },
+  modules: ["@nuxtjs/tailwindcss", "@hypernym/nuxt-gsap", "@pinia/nuxt"],
+  gsap: {
+    extraPlugins: {
+      scrollTrigger: true,
+      scrollTo: true,
+    },
+  },
   app: {
-         pageTransition: {
-      name: 'fade',
-      mode: 'out-in' // default
+    pageTransition: {
+      name: "fade",
+      mode: "out-in", // default
     },
     layoutTransition: {
-      name: 'fade',
-      mode: 'out-in' // default
+      name: "fade",
+      mode: "out-in", // default
     },
     head: {
-      
       titleTemplate: "Maxime Caro",
       htmlAttrs: {
         lang: "fr",
@@ -76,14 +83,4 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
     },
   },
-
-  nitro: { preset: "netlify-edge" },
-  modules: ["@nuxtjs/tailwindcss", "@hypernym/nuxt-gsap", '@vueuse/nuxt', "nuxt-swiper", "@pinia/nuxt", "@nuxtjs/device", ],
-    swiper: {
-    // Swiper options
-    //----------------------
-    prefix: 'Swiper',
-     styleLang: 'css',
-     modules: ['navigation',"mousewheel","autoplay","effect-creative" ,"effect-cube","free-mode", "grid"], // all modules are imported by default
-  }
 });

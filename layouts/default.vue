@@ -1,19 +1,19 @@
 <template>
   <div class="scroll-smooth">
-    <header class="bg-transparent fixed w-screen top-0 z-50">
+    <nav class="bg-transparent fixed w-screen top-0 z-50">
       <div
         class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
         <NuxtLink
           to="/"
-          class="z-50 ml-3 flex layer title-font font-medium items-center mb-4 md:mb-0 hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0"
+          class="z-50 ml-3 flex layer title-font font-medium items-center mb-4 md:mb-0 animate_underline"
         >
           <h2 class="hero glitch layers" data-text="Maxime CARO">
             <span>Maxime CARO</span>
           </h2>
         </NuxtLink>
       </div>
-    </header>
+    </nav>
 
     <slot />
 
@@ -31,7 +31,7 @@
             class="flex title-font font-medium items-center md:justify-start justify-center ice-cream"
           >
             <h2
-              class="ml-3 text-lg hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:scale-110 hover:text-[#ff0000]"
+              class="ml-3 text-lg hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:text-[#ff0000]"
               data-text="Ice Cream"
             >
               <span class="hover:text-[#ff0000]">
@@ -42,20 +42,16 @@
           <p
             class="text-base text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:py-2 sm:mt-0 mt-4"
           >
-            © 2024 —
-            <a
-              href=""
-              class="text-white ml-1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              @Mazzar
-            </a>
+            © 2024
           </p>
           <span
             class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start"
           >
-            <a class="ml-3 text-gray-400">
+            <a
+              class="ml-3 text-gray-400"
+              href="https://www.instagram.com/maxime___caro/"
+              target="_blank"
+            >
               <h2
                 class="hero glitch layers mdi-instagram mdi mdi-24px"
                 data-text="Instagram"
@@ -84,11 +80,7 @@ const handleMouseMove = () => {
 
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMove)
-  handleMouseMove() // Ensure footer is visible on initial load
-})
-
-onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
+  handleMouseMove()
 })
 </script>
 

@@ -2,12 +2,7 @@
   <div class="select-none">
     <!--<Loading v-if="loading" />-->
     <NuxtLayout>
-      <NuxtPage
-        :transition="{
-          name: 'fade',
-          mode: 'out-in',
-        }"
-      />
+      <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
@@ -23,14 +18,4 @@ nuxtApp.hook("page:finish", () => {
   }, 1000);
 }); */
 </script>
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-/* TRANSITION ANIMATION PAGE  */
-</style>
+

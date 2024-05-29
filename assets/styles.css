@@ -1,37 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
   h1 {
-    @apply text-4xl text-white text-left;
+    @apply text-2xl text-white text-left sm:text-4xl;
   }
   h2 {
-    @apply text-2xl text-slate-200 text-left;
+    @apply text-xl text-slate-200 text-left sm:text-2xl;
   }
   h3 {
-    @apply text-xl text-slate-200 text-left;
+    @apply text-lg text-slate-200 text-left sm:text-xl;
   }
 }
-
+@layer components {
+  .animate_underline {
+    @apply hover:before:scale-x-100 hover:before:origin-left relative before:w-full before:h-0.5 before:origin-right before:transition-transform before:duration-300 before:scale-x-0 before:bg-white before:absolute before:left-0 before:bottom-0;
+  }
+}
 *,
 :after,
 :before {
   box-sizing: border-box;
 }
-
 @font-face {
   font-family: "Day Roman";
   font-style: normal;
   font-weight: 400;
   src: url("/fonts/DAYROM.ttf");
 }
-
 @font-face {
   font-family: "Stolzl";
   font-style: normal;
   font-weight: 400;
   src: url("/fonts/Stolzl.ttf");
+}
+.ice-cream {
+  font-family: "Stolzl" !important;
 }
 body,
 html {
@@ -41,31 +45,19 @@ html {
   overflow-x: hidden !important;
   scroll-behavior: smooth !important;
   scroll-snap-type: y mandatory;
-}
-.ice-cream {
-  font-family: "Stolzl" !important;
-}
-.videobg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  z-index: -2;
-}
-
-ul,
-li {
-  list-style-type: none;
-}
-
-html {
   overflow: scroll;
-  overflow-x: hidden;
+  overflow-x: hidden; /*FireFox*/
+  scrollbar-width: none;
+  /*IE10+*/
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 ::-webkit-scrollbar {
   width: 0; /* Remove scrollbar space */
@@ -76,13 +68,6 @@ html {
   display: none;
 }
 
-html,
-body {
-  /*FireFox*/
-  scrollbar-width: none;
-  /*IE10+*/
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-}
 ::-webkit-scrollbar {
   /*Chrome, Safari, Edge*/
   display: none;
@@ -91,27 +76,6 @@ body {
   -webkit-appearance: none;
   width: 0;
   height: 0;
-}
-.video-responsive {
-  overflow: hidden;
-  padding-bottom: 56.25%;
-  position: relative;
-  height: 0;
-}
-
-.title_vid {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.video-responsive iframe {
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  position: absolute;
 }
 
 /*  ANIMATION SVG   */
