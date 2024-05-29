@@ -2,11 +2,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
   nitro: { preset: "netlify-edge" },
-  modules: ["@nuxtjs/tailwindcss", "@hypernym/nuxt-gsap", "@pinia/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@hypernym/nuxt-gsap", "@pinia/nuxt", 'nuxt-lazy-load'],
   gsap: {
     extraPlugins: {
       scrollTrigger: true,
       scrollTo: true,
+      text:true,
     },
   },
   app: {

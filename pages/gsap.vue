@@ -15,38 +15,38 @@
   </div>
 </template>
 <script lang="ts" setup>
-const { $gsap, $ScrollTrigger } = useNuxtApp()
+const { $gsap, $ScrollTrigger, $ScrollTo } = useNuxtApp();
 onMounted(() => {
-  let sections = $gsap.utils.toArray('.panel')
-  console.log(sections)
+  let sections = $gsap.utils.toArray(".panel");
+  console.log(sections);
   function goToSection(i) {
     $gsap.to(window, {
       scrollTo: {
         y: i * innerHeight,
         autoKill: false,
-        ease: 'Power3.easeInOut',
+        ease: "Power3.easeInOut",
       },
       duration: 0.85,
-    })
+    });
   }
 
   $ScrollTrigger.defaults({
     markers: true,
-  })
+  });
 
   sections.forEach((eachPanel, i) => {
     $ScrollTrigger.create({
       trigger: eachPanel,
       onEnter: () => goToSection(i),
-    })
+    });
 
     $ScrollTrigger.create({
       trigger: eachPanel,
-      start: 'bottom bottom',
+      start: "bottom bottom",
       onEnterBack: () => goToSection(i),
-    })
-  })
-})
+    });
+  });
+});
 </script>
 <style scoped>
 * {

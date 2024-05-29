@@ -1,7 +1,10 @@
 <template>
-  <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity">
+  <div
+    id="container"
+    class="bg-black w-screen h-screen -z-40 snap-y snap-proximity"
+  >
     <section
-      class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center"
+      class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center section"
       v-for="(work, index) in works.slice(0, 20)"
       :key="index"
       :id="'section-' + index"
@@ -18,7 +21,7 @@
               :data-text="'&nbsp-&nbsp' + work.name"
               id="name"
             >
-              <span id="name">{{ '&nbsp-&nbsp' + work.name }}</span>
+              <span id="name">{{ "&nbsp-&nbsp" + work.name }}</span>
             </h1>
           </div>
         </NuxtLink>
@@ -36,21 +39,37 @@
         autoplay
         webkit-playsinline
         loop
+        :aria-label="work.brand"
       ></video>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useProjectsStore } from '@/store/projects'
-const projectsStore = useProjectsStore()
-const works = projectsStore.projects.works.data
-
+import { useProjectsStore } from "@/store/projects";
+const projectsStore = useProjectsStore();
+const works = projectsStore.projects.works.data;
+const { $gsap, $ScrollTrigger, $ScrollTo } = useNuxtApp();
 onMounted(() => {
-  var video = document.querySelector('.video')
-  video.muted = true
-  video.play()
-})
+  $gsap.to("#section-0 h1", {
+    scrollTrigger: ".section",
+    toggleActions: "restart complete restart reset",
+    duration: 10,
+    rotation: 360,
+  });
+
+  const videos = document.querySelectorAll(".video");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.play();
+      } else {
+        entry.target.pause();
+      }
+    });
+  });
+  videos.forEach((video) => observer.observe(video));
+});
 </script>
 
 <style scoped>
