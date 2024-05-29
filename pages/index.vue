@@ -30,8 +30,7 @@
         </h2>
       </div>
       <video
-        id="video"
-        class="no_controls absolute z-10 w-auto min-w-screen min-h-screen max-w-none aspect-video"
+        class="video no_controls absolute z-10 w-auto min-w-screen min-h-screen max-w-none aspect-video"
         muted
         :src="work.preview"
         autoplay
@@ -46,7 +45,14 @@
 import { useProjectsStore } from '@/store/projects'
 const projectsStore = useProjectsStore()
 const works = projectsStore.projects.works.data
+
+onMounted(() => {
+  var video = document.querySelector('.video')
+  video.muted = true
+  video.play()
+})
 </script>
+
 <style scoped>
 video::-webkit-media-controls,
 video::-moz-media-controls,
