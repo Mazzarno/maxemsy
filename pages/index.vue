@@ -1,7 +1,7 @@
 <template>
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
     <div
-      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex flex-col items-center space-y-5 z-50 m-5"
+      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col items-center space-y-5 z-50 m-5 hidden md:flex"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
@@ -21,7 +21,9 @@
       :key="index"
       :id="'section-' + index"
     >
-      <div class="z-40 absolute top-1/2 left-1/4 transform -translate-y-1/2">
+      <div
+        class="z-40 absolute left-5 transform -translate-y-1/2 sm:left-1/4 top-1/2"
+      >
         <NuxtLink :to="'/film/' + index">
           <div id="title" class="flex cursor-pointer animate_underline">
             <h1 class="z-50 hero glitch layers" :data-text="work.brand">
@@ -45,11 +47,12 @@
         </h2>
       </div>
       <video
-        class="video no_controls absolute z-10 w-auto min-w-screen min-h-screen max-w-none aspect-video"
+        class="video no_controls absolute z-10 w-auto min-w-screen min-h-screen max-w-none aspect-video pointer-events-none"
         muted
         :src="work.preview"
         autoplay
         webkit-playsinline
+        playsinline
         loop
         :aria-label="work.brand"
       ></video>
@@ -132,8 +135,11 @@ video::-moz-media-controls,
 video::-o-media-controls,
 video::-ms-media-controls {
   display: none !important;
+  pointer-events: none !important;
+  touch-action: none !important;
 }
 video {
   pointer-events: none !important;
+  touch-action: none !important;
 }
 </style>
