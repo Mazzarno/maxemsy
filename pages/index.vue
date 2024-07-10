@@ -15,6 +15,13 @@
       ></div>
     </div>
 
+    <div class="fixed top-0 right-0 w-0.5 h-full bg-transparent z-50">
+      <div
+        class="bg-white w-full h-0 rounded-b drop-shadow-2xl shadow-2xl"
+        :style="{ height: progressHeight + '%' }"
+      ></div>
+    </div>
+
     <section
       class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center section"
       v-for="(work, index) in works.slice(0, 20)"
@@ -35,7 +42,7 @@
               :data-text="'&nbsp-&nbsp' + work.name"
               id="name"
             >
-              <span id="name">{{ '&nbsp-&nbsp' + work.name }}</span>
+              <span id="name">{{ "&nbsp-&nbsp" + work.name }}</span>
             </h1>
           </div>
         </NuxtLink>
@@ -52,7 +59,6 @@
         :src="work.preview"
         autoplay
         webkit-playsinline
-        playsinline
         loop
         :aria-label="work.brand"
       ></video>
@@ -61,72 +67,90 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectsStore } from '@/store/projects'
-const projectsStore = useProjectsStore()
-const works = projectsStore.projects.works.data
-const { $gsap, $ScrollTrigger, $ScrollTo, $Observer } = useNuxtApp()
+import { ref, onMounted, watch } from "vue";
+import { useProjectsStore } from "@/store/projects";
+const projectsStore = useProjectsStore();
+const works = projectsStore.projects.works.data;
+const { $gsap, $ScrollTrigger } = useNuxtApp();
 
-const currentSection = ref(0)
+const currentSection = ref(0);
+const progressHeight = ref(0);
+let autoScrollInterval: number;
+let progressInterval: number;
 
 const scrollToSection = (index: number) => {
-  const section = document.getElementById('section-' + index)
+  const section = document.getElementById("section-" + index);
   if (section) {
-    section.scrollIntoView({ behavior: 'smooth' })
-    currentSection.value = index
+    section.scrollIntoView({ behavior: "smooth" });
+    currentSection.value = index;
+    resetAutoScroll();
   }
-}
+};
 
 const nextSection = () => {
   if (currentSection.value < works.length - 1) {
-    scrollToSection(currentSection.value + 1)
+    scrollToSection(currentSection.value + 1);
   }
-}
+};
 
 const previousSection = () => {
   if (currentSection.value > 0) {
-    scrollToSection(currentSection.value - 1)
+    scrollToSection(currentSection.value - 1);
   }
-}
+};
+
+const resetAutoScroll = () => {
+  clearInterval(autoScrollInterval);
+  clearInterval(progressInterval);
+  progressHeight.value = 0;
+  autoScrollInterval = setInterval(nextSection, 10000);
+  progressInterval = setInterval(() => {
+    if (progressHeight.value < 100) {
+      progressHeight.value += 0.1; // Adjust the speed of progress bar increase
+    }
+  }, 10);
+};
+
+// Watch for changes in currentSection to reset auto scroll
+watch(currentSection, () => {
+  resetAutoScroll();
+});
 
 onMounted(() => {
-  const sections = document.querySelectorAll('section')
+  const sections = document.querySelectorAll("section");
 
-  sections.forEach((section, index) => {
-    $ScrollTrigger.create({
-      trigger: section,
-      start: 'top center',
-      end: 'bottom center',
-      onEnter: () => (currentSection.value = index),
-      onEnterBack: () => (currentSection.value = index),
-    })
-  })
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Array.from(sections).indexOf(entry.target);
+          if (currentSection.value !== index) {
+            currentSection.value = index;
+          }
+        }
+      });
+    },
+    {
+      threshold: 0.6, // Adjust threshold to ensure section is mostly visible
+    }
+  );
 
-  // Use GSAP Observer to detect scroll up and down
-  $Observer.create({
-    target: window,
-    type: 'wheel,touch',
-    onUp: previousSection,
-    onDown: nextSection,
-  })
+  sections.forEach((section) => observer.observe(section));
 
-  $gsap.to('#section-1 h1', {
-    scrollTrigger: '#section-1',
-    duration: 1,
-    rotation: 360,
-  })
-
-  const videos = document.querySelectorAll('.video')
-  const observer = new IntersectionObserver((entries) => {
+  const videos = document.querySelectorAll(".video");
+  const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.play()
+        entry.target.play();
       } else {
-        entry.target.pause()
+        entry.target.pause();
       }
-    })
-  })
-  videos.forEach((video) => observer.observe(video))
-})
+    });
+  });
+  videos.forEach((video) => videoObserver.observe(video));
+
+  resetAutoScroll();
+});
 </script>
 
 <style scoped>
