@@ -2,17 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 @layer base {
-  h1,
-  span {
-    @apply text-xl text-white text-left sm:text-2xl;
+  .brandname {
+    @apply text-xl text-white text-left sm:text-4xl;
   }
-  h2,
-  span {
-    @apply text-lg text-slate-200 text-left sm:text-xl;
-  }
-  h3,
-  span {
-    @apply text-lg text-slate-200 text-left sm:text-xl;
+  .prodcrew {
+    @apply text-lg text-slate-200 text-left sm:text-2xl;
   }
 }
 @layer components {

@@ -1,27 +1,51 @@
 <template>
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
+    <!-- Dots Navigation -->
     <div
       class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col items-center space-y-5 z-50 m-5 hidden md:flex"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
         :key="'dot-' + index"
-        @click="scrollToSection(index)"
-        class="w-1.5 h-1.5 rounded-full cursor-pointer hero glitch layers hover:w-2 hover:h-2"
-        :class="{
-          'bg-white w-2.5 h-2.5': currentSection === index,
-          'bg-slate-500': currentSection !== index,
-        }"
-      ></div>
+        class="relative flex items-center"
+      >
+        <div
+          class="flex absolute right-6 opacity-0 whitespace-nowrap text-white"
+          :id="'dot-label-' + index"
+        >
+          <h4 class="z-50 hero glitch" :data-text="work.brand">
+            <span>{{ work.brand }}</span>
+          </h4>
+          <h4
+            v-if="work.name"
+            class="z-50 hero glitch"
+            :data-text="'&nbsp' + '-' + '&nbsp' + work.name"
+          >
+            <span>{{ "&nbsp" + "-" + "&nbsp" + work.name }}</span>
+          </h4>
+        </div>
+        <div
+          @mouseover="showLabel(index)"
+          @mouseleave="hideLabel(index)"
+          @click="scrollToSection(index)"
+          class="w-1 h-1 rounded-full cursor-pointer hover:w-2 hover:h-2"
+          :class="{
+            'bg-slate-800 w-2 h-2 hero': currentSection === index,
+            'bg-white hero': currentSection !== index,
+          }"
+        ></div>
+      </div>
     </div>
 
+    <!-- Progress Bar -->
     <div class="fixed top-0 right-0 w-0.5 h-full bg-transparent z-50">
       <div
-        class="bg-white w-full h-0 rounded-b drop-shadow-2xl shadow-2xl"
+        class="bg-white w-full h-0 shadow-2xl drop-shadow-2xl rounded-b-2xl"
         :style="{ height: progressHeight + '%' }"
       ></div>
     </div>
 
+    <!-- Sections with Video -->
     <section
       class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center section"
       v-for="(work, index) in works.slice(0, 20)"
@@ -29,27 +53,34 @@
       :id="'section-' + index"
     >
       <div
-        class="z-40 absolute left-5 transform -translate-y-1/2 sm:left-1/4 top-1/2"
+        class="z-40 absolute left-5 transform -translate-y-1/2 sm:left-1/4 top-1/2 animate-from-top"
+        :id="'section-content-' + index"
       >
         <NuxtLink :to="'/film/' + index">
           <div id="title" class="flex cursor-pointer animate_underline">
-            <h1 class="z-50 hero glitch layers" :data-text="work.brand">
-              <span>{{ work.brand }}</span>
+            <h1
+              class="z-50 hero glitch layers brandname"
+              :data-text="work.brand"
+            >
+              <span class="brandname">{{ work.brand }}</span>
             </h1>
             <h1
               v-if="work.name"
-              class="z-50 hero glitch layers"
-              :data-text="'&nbsp-&nbsp' + work.name"
-              id="name"
+              class="z-50 hero glitch layers brandname"
+              :data-text="'&nbsp; -' + work.name"
             >
-              <span id="name">{{ "&nbsp-&nbsp" + work.name }}</span>
+              <span>{{ "&nbsp; -" + work.name }}</span>
             </h1>
           </div>
         </NuxtLink>
-        <h2 v-if="work.production" class="layers indextext" id="production">
+        <h2
+          v-if="work.production"
+          class="layers indextext prodcrew"
+          id="production"
+        >
           {{ work.production }}
         </h2>
-        <h2 v-if="work.crew" class="z-50 layers indextext" id="crew">
+        <h2 v-if="work.crew" class="z-50 layers indextext prodcrew" id="crew">
           {{ work.crew }}
         </h2>
       </div>
@@ -71,7 +102,7 @@ import { ref, onMounted, watch } from "vue";
 import { useProjectsStore } from "@/store/projects";
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
-const { $gsap, $ScrollTrigger } = useNuxtApp();
+const { $gsap, $ScrollTrigger, $TextPlugin } = useNuxtApp();
 
 const currentSection = ref(0);
 const progressHeight = ref(0);
@@ -90,6 +121,8 @@ const scrollToSection = (index: number) => {
 const nextSection = () => {
   if (currentSection.value < works.length - 1) {
     scrollToSection(currentSection.value + 1);
+  } else {
+    scrollToSection(0); // Scroll back to the first section
   }
 };
 
@@ -116,6 +149,14 @@ watch(currentSection, () => {
   resetAutoScroll();
 });
 
+const showLabel = (index: number) => {
+  $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
+};
+
+const hideLabel = (index: number) => {
+  $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
+};
+
 onMounted(() => {
   const sections = document.querySelectorAll("section");
 
@@ -127,6 +168,39 @@ onMounted(() => {
           if (currentSection.value !== index) {
             currentSection.value = index;
           }
+          // Animate section content with random characters
+          $gsap.fromTo(
+            `#section-content-${index}`,
+            { y: -50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1 }
+          );
+
+          // GSAP text animation with random characters
+          const elements = document.querySelectorAll(
+            `#section-content-${index} .brandname, #section-content-${index} .prodcrew`
+          );
+          elements.forEach((el) => {
+            const originalText = el.innerText;
+            $gsap.fromTo(
+              el,
+              {
+                text: {
+                  value: getRandomChars(originalText.length),
+                  scrambleText: {
+                    chars: "0123456789!@#$%^&*()_+{}[]",
+                    speed: 0.2,
+                  },
+                },
+              },
+              {
+                text: {
+                  value: originalText,
+                  scrambleText: { chars: originalText, revealDelay: 0.2 },
+                },
+                duration: 1,
+              }
+            );
+          });
         }
       });
     },
@@ -151,19 +225,33 @@ onMounted(() => {
 
   resetAutoScroll();
 });
+
+const getRandomChars = (length) => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
 </script>
 
 <style scoped>
-video::-webkit-media-controls,
-video::-moz-media-controls,
-video::-o-media-controls,
-video::-ms-media-controls {
+.video::-webkit-media-controls,
+.video::-moz-media-controls,
+.video::-o-media-controls,
+.video::-ms-media-controls {
   display: none !important;
   pointer-events: none !important;
   touch-action: none !important;
 }
-video {
+.video {
   pointer-events: none !important;
   touch-action: none !important;
+}
+.animate-from-top {
+  opacity: 0;
+  transform: translateY(-50px);
 }
 </style>
