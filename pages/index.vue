@@ -10,7 +10,7 @@
         class="relative flex items-center"
       >
         <div
-          class="flex absolute right-6 opacity-0 whitespace-nowrap text-white"
+          class="flex absolute right-8 opacity-0 whitespace-nowrap text-white"
           :id="'dot-label-' + index"
         >
           <h4 class="z-50 hero glitch" :data-text="work.brand">
@@ -19,19 +19,19 @@
           <h4
             v-if="work.name"
             class="z-50 hero glitch"
-            :data-text="'&nbsp' + '-' + '&nbsp' + work.name"
+            :data-text="`&nbsp;- ${work.name}`"
           >
-            <span>{{ "&nbsp" + "-" + "&nbsp" + work.name }}</span>
+            <span>{{ `&nbsp;- ${work.name}` }}</span>
           </h4>
         </div>
         <div
           @mouseover="showLabel(index)"
           @mouseleave="hideLabel(index)"
           @click="scrollToSection(index)"
-          class="w-1 h-1 rounded-full cursor-pointer hover:w-2 hover:h-2"
+          class="w-2 h-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-150"
           :class="{
-            'bg-slate-800 w-2 h-2 hero': currentSection === index,
-            'bg-white hero': currentSection !== index,
+            'bg-slate-800': currentSection === index,
+            'bg-white': currentSection !== index,
           }"
         ></div>
       </div>
@@ -62,14 +62,14 @@
               class="z-50 hero glitch layers brandname"
               :data-text="work.brand"
             >
-              <span class="brandname">{{ work.brand }}</span>
+              <span class="brandname">{{ `${work.brand} ` }}</span>
             </h1>
             <h1
               v-if="work.name"
               class="z-50 hero glitch layers brandname"
-              :data-text="'&nbsp; -' + work.name"
+              :data-text="`&ensp; - ${work.name}`"
             >
-              <span>{{ "&nbsp; -" + work.name }}</span>
+              <span>{{ `&ensp; - ${work.name}` }}</span>
             </h1>
           </div>
         </NuxtLink>
@@ -159,7 +159,6 @@ const hideLabel = (index: number) => {
 
 onMounted(() => {
   const sections = document.querySelectorAll("section");
-
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -171,8 +170,8 @@ onMounted(() => {
           // Animate section content with random characters
           $gsap.fromTo(
             `#section-content-${index}`,
-            { y: -50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1 }
+            { y: -100, opacity: 0 },
+            { y: 0, opacity: 1, duration: 2 }
           );
 
           // GSAP text animation with random characters
@@ -187,7 +186,7 @@ onMounted(() => {
                 text: {
                   value: getRandomChars(originalText.length),
                   scrambleText: {
-                    chars: "0123456789!@#$%^&*()_+{}[]",
+                    chars: "0123456789!@#$%^&*()_+{}[]?",
                     speed: 0.2,
                   },
                 },
@@ -243,15 +242,6 @@ const getRandomChars = (length) => {
 .video::-o-media-controls,
 .video::-ms-media-controls {
   display: none !important;
-  pointer-events: none !important;
-  touch-action: none !important;
-}
-.video {
-  pointer-events: none !important;
-  touch-action: none !important;
-}
-.animate-from-top {
-  opacity: 0;
-  transform: translateY(-50px);
+  pointer-events: none;
 }
 </style>

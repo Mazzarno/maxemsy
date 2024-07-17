@@ -34,9 +34,7 @@
               class="ml-3 text-lg hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:text-[#ff0000]"
               data-text="Ice Cream"
             >
-              <span class="hover:text-[#ff0000]">
-                Ice Cream
-              </span>
+              <span class="hover:text-[#ff0000]"> Ice Cream </span>
             </h2>
           </a>
           <p
@@ -67,21 +65,21 @@
 </template>
 
 <script setup>
-const showFooter = ref(true)
-let mouseTimeout
+const showFooter = ref(true);
+let mouseTimeout;
 
 const handleMouseMove = () => {
-  showFooter.value = true
-  clearTimeout(mouseTimeout)
+  showFooter.value = true;
+  clearTimeout(mouseTimeout);
   mouseTimeout = setTimeout(() => {
-    showFooter.value = false
-  }, 3000)
-}
+    showFooter.value = false;
+  }, 3000);
+};
 
 onMounted(() => {
-  window.addEventListener('mousemove', handleMouseMove)
-  handleMouseMove()
-})
+  window.addEventListener("mousemove", handleMouseMove);
+  handleMouseMove();
+});
 </script>
 
 <style>

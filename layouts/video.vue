@@ -29,7 +29,7 @@
                 class="text-xl text-white glitch hero"
                 :data-text="'&nbsp-&nbsp' + currentProject?.name"
               >
-                <span>{{ '&nbsp-&nbsp' + currentProject?.name }}</span>
+                <span>{{ "&nbsp-&nbsp" + currentProject?.name }}</span>
               </h2>
             </div>
             <h2
@@ -48,36 +48,35 @@
         </transition>
       </div>
     </nav>
-
     <slot />
   </div>
 </template>
 
 <script setup>
-import { useProjectsStore } from '@/store/projects'
-const $route = useRoute()
-const projectsStore = useProjectsStore()
-const currentProject = ref(null)
-const showName = ref(true)
-let mouseTimeout
+import { useProjectsStore } from "@/store/projects";
+const $route = useRoute();
+const projectsStore = useProjectsStore();
+const currentProject = ref(null);
+const showName = ref(true);
+let mouseTimeout;
 
 const handleMouseMove = () => {
-  showName.value = true
-  clearTimeout(mouseTimeout)
+  showName.value = true;
+  clearTimeout(mouseTimeout);
   mouseTimeout = setTimeout(() => {
-    showName.value = false
-  }, 3000)
-}
+    showName.value = false;
+  }, 3000);
+};
 onMounted(() => {
-  const index = $route.params.slug
-  const project = projectsStore.projects.works.data[index]
+  const index = $route.params.slug;
+  const project = projectsStore.projects.works.data[index];
   if (project) {
-    currentProject.value = project
-    projectsStore.setCurrentProject(project)
+    currentProject.value = project;
+    projectsStore.setCurrentProject(project);
   }
-  window.addEventListener('mousemove', handleMouseMove)
-  handleMouseMove() // Ensure footer is visible on initial load
-})
+  window.addEventListener("mousemove", handleMouseMove);
+  handleMouseMove(); // Ensure footer is visible on initial load
+});
 </script>
 
 <style>

@@ -34,6 +34,10 @@
 .ice-cream {
   font-family: "Stolzl" !important;
 }
+
+html {
+  overscroll-behavior: none;
+}
 body,
 html {
   font-family: "Day Roman" !important;
