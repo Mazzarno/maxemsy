@@ -62,14 +62,14 @@
               class="z-50 hero glitch layers brandname"
               :data-text="work.brand"
             >
-              <span class="brandname">{{ `${work.brand} ` }}</span>
+              <span class="brandname">{{ `${work.brand}` }}</span>
             </h1>
             <h1
               v-if="work.name"
               class="z-50 hero glitch layers brandname"
-              :data-text="`&ensp; - ${work.name}`"
+              :data-text="`&nbsp;- ${work.name}`"
             >
-              <span>{{ `&ensp; - ${work.name}` }}</span>
+              <span>{{ `&nbsp;- ${work.name}` }}</span>
             </h1>
           </div>
         </NuxtLink>
@@ -170,36 +170,9 @@ onMounted(() => {
           // Animate section content with random characters
           $gsap.fromTo(
             `#section-content-${index}`,
-            { y: -100, opacity: 0 },
+            { y: -300, opacity: 0 },
             { y: 0, opacity: 1, duration: 2 }
           );
-
-          // GSAP text animation with random characters
-          const elements = document.querySelectorAll(
-            `#section-content-${index} .brandname, #section-content-${index} .prodcrew`
-          );
-          elements.forEach((el) => {
-            const originalText = el.innerText;
-            $gsap.fromTo(
-              el,
-              {
-                text: {
-                  value: getRandomChars(originalText.length),
-                  scrambleText: {
-                    chars: "0123456789!@#$%^&*()_+{}[]?",
-                    speed: 0.2,
-                  },
-                },
-              },
-              {
-                text: {
-                  value: originalText,
-                  scrambleText: { chars: originalText, revealDelay: 0.2 },
-                },
-                duration: 1,
-              }
-            );
-          });
         }
       });
     },
@@ -224,16 +197,6 @@ onMounted(() => {
 
   resetAutoScroll();
 });
-
-const getRandomChars = (length) => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
 </script>
 
 <style scoped>
