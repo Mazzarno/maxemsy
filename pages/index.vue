@@ -47,13 +47,15 @@
 
     <!-- Sections with Video -->
     <section
-      class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center section"
       v-for="(work, index) in works.slice(0, 20)"
       :key="index"
       :id="'section-' + index"
+      class="relative flex items-center justify-center h-screen overflow-hidden w-screen snap-center section"
+      :class="{ 'section-active': index === currentSection }"
+      :style="{ 'z-index': index === currentSection ? 10 : 5 }"
     >
       <div
-        class="z-40 absolute left-5 transform -translate-y-1/2 sm:left-1/4 top-1/2 animate-from-top"
+        class="z-40 absolute left-5 transform sm:left-1/4 top-1/2 animate-from-top"
         :id="'section-content-' + index"
       >
         <NuxtLink :to="'/film/' + index">
@@ -98,24 +100,100 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import { useProjectsStore } from "@/store/projects";
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
-const { $gsap, $ScrollTrigger, $TextPlugin } = useNuxtApp();
+const { $gsap, $Observer } = useNuxtApp();
 
 const currentSection = ref(0);
 const progressHeight = ref(0);
 let autoScrollInterval: number;
 let progressInterval: number;
+let isTransitioning = false;
+
+const animateTextIn = (index: number) => {
+  const title = document.querySelector(`#section-content-${index} #title`);
+  const production = document.querySelector(
+    `#section-content-${index} #production`
+  );
+  const crew = document.querySelector(`#section-content-${index} #crew`);
+
+  $gsap.fromTo(
+    title,
+    { y: -200, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1, delay: 1 }
+  );
+
+  $gsap.fromTo(
+    production,
+    { y: -200, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1, delay: 1.5 }
+  );
+
+  $gsap.fromTo(
+    crew,
+    { y: -200, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1, delay: 1.5 }
+  );
+};
+
+const animateTextOut = (index: number, callback: () => void) => {
+  const title = document.querySelector(`#section-content-${index} #title`);
+  const production = document.querySelector(
+    `#section-content-${index} #production`
+  );
+  const crew = document.querySelector(`#section-content-${index} #crew`);
+
+  const timeline = $gsap.timeline({
+    onComplete: callback,
+  });
+
+  timeline.to(title, { y: -200, opacity: 0, duration: 1 });
+  timeline.to(production, { y: 200, opacity: 0, duration: 1 }, "-=0.5");
+  timeline.to(crew, { y: 200, opacity: 0, duration: 1 }, "-=0.5");
+};
 
 const scrollToSection = (index: number) => {
-  const section = document.getElementById("section-" + index);
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth" });
-    currentSection.value = index;
+  if (isTransitioning || index === currentSection.value) return;
+
+  isTransitioning = true;
+
+  animateTextOut(currentSection.value, () => {
+    const currentElement = document.getElementById(
+      `section-${currentSection.value}`
+    );
+    const nextElement = document.getElementById(`section-${index}`);
+
+    if (currentElement && nextElement) {
+      nextElement.style.display = "flex";
+      nextElement.style.opacity = "0";
+      nextElement.style.zIndex = "10";
+
+      $gsap.to(currentElement, {
+        opacity: 0,
+        duration: 1,
+        onComplete: () => {
+          currentElement.style.zIndex = "5";
+          currentSection.value = index;
+          currentElement.style.display = "none";
+          currentElement.style.opacity = "1";
+        },
+      });
+
+      $gsap.to(nextElement, {
+        opacity: 1,
+        duration: 1,
+        onComplete: async () => {
+          await nextTick();
+          animateTextIn(index);
+          isTransitioning = false;
+        },
+      });
+    }
+
     resetAutoScroll();
-  }
+  });
 };
 
 const nextSection = () => {
@@ -159,29 +237,11 @@ const hideLabel = (index: number) => {
 
 onMounted(() => {
   const sections = document.querySelectorAll("section");
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const index = Array.from(sections).indexOf(entry.target);
-          if (currentSection.value !== index) {
-            currentSection.value = index;
-          }
-          // Animate section content with random characters
-          $gsap.fromTo(
-            `#section-content-${index}`,
-            { y: -300, opacity: 0 },
-            { y: 0, opacity: 1, duration: 2 }
-          );
-        }
-      });
-    },
-    {
-      threshold: 0.6, // Adjust threshold to ensure section is mostly visible
+  sections.forEach((section, index) => {
+    if (index !== currentSection.value) {
+      section.style.display = "none";
     }
-  );
-
-  sections.forEach((section) => observer.observe(section));
+  });
 
   const videos = document.querySelectorAll(".video");
   const videoObserver = new IntersectionObserver((entries) => {
@@ -196,6 +256,16 @@ onMounted(() => {
   videos.forEach((video) => videoObserver.observe(video));
 
   resetAutoScroll();
+
+  // Create the Observer for scroll and touch events
+  $Observer.create({
+    target: window,
+    type: "wheel,touch,scroll",
+    onUp: previousSection,
+    onDown: nextSection,
+    tolerance: 10,
+    preventDefault: true,
+  });
 });
 </script>
 
@@ -206,5 +276,17 @@ onMounted(() => {
 .video::-ms-media-controls {
   display: none !important;
   pointer-events: none;
+}
+
+.section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.section-active {
+  z-index: 10;
 }
 </style>
