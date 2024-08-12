@@ -2,7 +2,7 @@
   <div>
     <nav class="bg-transparent fixed w-screen top-0 z-50">
       <div
-        class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
+        class="container mx-24 flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
         <NuxtLink
           to="/"

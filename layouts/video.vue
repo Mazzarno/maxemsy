@@ -2,10 +2,10 @@
   <div class="scroll-smooth">
     <nav class="bg-transparent fixed w-screen top-0 z-50">
       <div
-        class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
+        class="container mx-24 flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
         <transition name="fade">
-          <div v-show="showName" class="ml-3">
+          <div v-show="showName">
             <NuxtLink
               to="/"
               class="z-50 flex layer title-font font-medium items-center mb-4 md:mb-0"
@@ -65,7 +65,7 @@ const handleMouseMove = () => {
   clearTimeout(mouseTimeout);
   mouseTimeout = setTimeout(() => {
     showName.value = false;
-  }, 3000);
+  }, 2400);
 };
 onMounted(() => {
   const index = $route.params.slug;

@@ -27,8 +27,8 @@
         <div
           @mouseover="showLabel(index)"
           @mouseleave="hideLabel(index)"
-          @click="scrollToSection(index)"
-          class="w-2 h-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-150"
+          @click="scrollToSection(index, 'down')"
+          class="w-1.5 h-1.5 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-150 ml-10"
           :class="{
             'bg-slate-800': currentSection === index,
             'bg-white': currentSection !== index,
@@ -60,6 +60,7 @@
       >
         <NuxtLink :to="'/film/' + index">
           <div id="title" class="flex cursor-pointer animate_underline">
+            <!-- Ajouter style="opacity: 0;" -->
             <h1
               class="z-50 hero glitch layers brandname"
               :data-text="work.brand"
@@ -79,10 +80,17 @@
           v-if="work.production"
           class="layers indextext prodcrew"
           id="production"
+          style="opacity: 0"
         >
           {{ work.production }}
         </h2>
-        <h2 v-if="work.crew" class="z-50 layers indextext prodcrew" id="crew">
+        <h2
+          v-if="work.crew"
+          class="z-50 layers indextext prodcrew"
+          id="crew"
+          style="opacity: 0"
+        >
+          <!-- Ajouter style="opacity: 0;" -->
           {{ work.crew }}
         </h2>
       </div>
@@ -98,7 +106,6 @@
     </section>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useProjectsStore } from "@/store/projects";
@@ -112,54 +119,88 @@ let autoScrollInterval: number;
 let progressInterval: number;
 let isTransitioning = false;
 
-const animateTextIn = (index: number) => {
+const animateText = (index: number, direction: string, action: string) => {
   const title = document.querySelector(`#section-content-${index} #title`);
   const production = document.querySelector(
     `#section-content-${index} #production`
   );
   const crew = document.querySelector(`#section-content-${index} #crew`);
 
-  $gsap.fromTo(
-    title,
-    { y: -200, opacity: 0 },
-    { y: 0, opacity: 1, duration: 1, delay: 1 }
-  );
+  const timeline = $gsap.timeline();
 
-  $gsap.fromTo(
-    production,
-    { y: -200, opacity: 0 },
-    { y: 0, opacity: 1, duration: 1, delay: 1.5 }
-  );
+  if (action === "in") {
+    if (direction === "down") {
+      timeline.fromTo(
+        title,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 }
+      );
+      timeline.fromTo(
+        production,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.25"
+      );
+      timeline.fromTo(
+        crew,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.25"
+      );
+    } else {
+      timeline.fromTo(
+        crew,
+        { y: -50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.25"
+      );
+      timeline.fromTo(
+        production,
+        { y: -50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 }
+      );
+      timeline.fromTo(
+        title,
+        { y: -50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.25"
+      );
+    }
+  } else {
+    if (direction === "down") {
+      timeline.to(title, { y: -50, opacity: 0, duration: 0.5 });
+      timeline.to(production, { y: -50, opacity: 0, duration: 0.5 }, "-=0.25");
+      timeline.to(crew, { y: -50, opacity: 0, duration: 0.5 }, "-=0.25");
+    } else {
+      timeline.to(crew, { y: 50, opacity: 0, duration: 0.5 }, "-=0.25");
+      timeline.to(production, { y: 50, opacity: 0, duration: 0.5 });
+      timeline.to(title, { y: 50, opacity: 0, duration: 0.5 }, "-=0.25");
+    }
+  }
 
-  $gsap.fromTo(
-    crew,
-    { y: -200, opacity: 0 },
-    { y: 0, opacity: 1, duration: 1, delay: 1.5 }
-  );
+  return timeline;
 };
 
-const animateTextOut = (index: number, callback: () => void) => {
-  const title = document.querySelector(`#section-content-${index} #title`);
-  const production = document.querySelector(
-    `#section-content-${index} #production`
-  );
-  const crew = document.querySelector(`#section-content-${index} #crew`);
+const animateDots = (index: number) => {
+  const dots = document.querySelectorAll(".dot");
 
-  const timeline = $gsap.timeline({
-    onComplete: callback,
+  dots.forEach((dot, dotIndex) => {
+    const isActive = dotIndex === index;
+    $gsap.to(dot, {
+      backgroundColor: isActive ? "#1e293b" : "#ffffff",
+      duration: 0.5,
+    });
   });
-
-  timeline.to(title, { y: -200, opacity: 0, duration: 1 });
-  timeline.to(production, { y: 200, opacity: 0, duration: 1 }, "-=0.5");
-  timeline.to(crew, { y: 200, opacity: 0, duration: 1 }, "-=0.5");
 };
 
-const scrollToSection = (index: number) => {
+const scrollToSection = (index: number, direction: string) => {
   if (isTransitioning || index === currentSection.value) return;
 
   isTransitioning = true;
 
-  animateTextOut(currentSection.value, () => {
+  const outTimeline = animateText(currentSection.value, direction, "out");
+
+  outTimeline.eventCallback("onComplete", () => {
     const currentElement = document.getElementById(
       `section-${currentSection.value}`
     );
@@ -184,9 +225,11 @@ const scrollToSection = (index: number) => {
       $gsap.to(nextElement, {
         opacity: 1,
         duration: 1,
+        delay: 1, // Delay for 1 second before the next text animations
         onComplete: async () => {
           await nextTick();
-          animateTextIn(index);
+          animateText(index, direction, "in");
+          animateDots(index); // Appel de l'animation des dots ici
           isTransitioning = false;
         },
       });
@@ -198,15 +241,15 @@ const scrollToSection = (index: number) => {
 
 const nextSection = () => {
   if (currentSection.value < works.length - 1) {
-    scrollToSection(currentSection.value + 1);
+    scrollToSection(currentSection.value + 1, "down");
   } else {
-    scrollToSection(0); // Scroll back to the first section
+    scrollToSection(0, "down"); // Scroll back to the first section
   }
 };
 
 const previousSection = () => {
   if (currentSection.value > 0) {
-    scrollToSection(currentSection.value - 1);
+    scrollToSection(currentSection.value - 1, "up");
   }
 };
 
@@ -257,6 +300,10 @@ onMounted(() => {
 
   resetAutoScroll();
 
+  // Initial animation on page load
+  animateText(currentSection.value, "down", "in");
+  animateDots(currentSection.value); // Appel initial de l'animation des dots
+
   // Create the Observer for scroll and touch events
   $Observer.create({
     target: window,
@@ -268,7 +315,6 @@ onMounted(() => {
   });
 });
 </script>
-
 <style scoped>
 .video::-webkit-media-controls,
 .video::-moz-media-controls,
@@ -288,5 +334,18 @@ onMounted(() => {
 
 .section-active {
   z-index: 10;
+}
+
+#section-content {
+  opacity: 0; /* Make sure the content is hidden initially */
+}
+
+#title,
+#production,
+#crew {
+  opacity: 0;
+}
+.dot {
+  transition: background-color 0.5s ease;
 }
 </style>
