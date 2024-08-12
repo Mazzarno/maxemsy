@@ -6,34 +6,41 @@
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
-        :key="'dot-' + index"
+        :key="`dot-${index}`"
         class="relative flex items-center"
       >
+        <!-- Trigger Area with Larger Margin Left -->
         <div
-          class="flex absolute right-8 opacity-0 whitespace-nowrap text-white"
-          :id="'dot-label-' + index"
-        >
-          <h4 class="z-50 hero glitch" :data-text="work.brand">
-            <span>{{ work.brand }}</span>
-          </h4>
-          <h4
-            v-if="work.name"
-            class="z-50 hero glitch"
-            :data-text="`&nbsp;- ${work.name}`"
-          >
-            <span>{{ `&nbsp;- ${work.name}` }}</span>
-          </h4>
-        </div>
-        <div
+          class="flex items-center cursor-pointer"
           @mouseover="showLabel(index)"
           @mouseleave="hideLabel(index)"
-          @click="scrollToSection(index, 'down')"
-          class="w-1.5 h-1.5 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-150 ml-10"
-          :class="{
-            'bg-slate-800': currentSection === index,
-            'bg-white': currentSection !== index,
-          }"
-        ></div>
+          style="margin-left: 2rem"
+        >
+          <!-- Dot Label -->
+          <div
+            :id="`dot-label-${index}`"
+            class="absolute right-full opacity-0 whitespace-nowrap text-white mr-4"
+          >
+            <h4 class="z-50 hero glitch" :data-text="work.brand">
+              <span>{{ work.brand }}</span>
+            </h4>
+            <h4
+              v-if="work.name"
+              class="z-50 hero glitch"
+              :data-text="`&nbsp;- ${work.name}`"
+            >
+              <span>{{ `&nbsp;- ${work.name}` }}</span>
+            </h4>
+          </div>
+          <!-- Dot -->
+          <div
+            :class="{
+              'bg-slate-800': currentSection === index,
+              'bg-white': currentSection !== index,
+            }"
+            class="dot w-1.5 h-1.5 rounded-full transition-transform duration-300 hover:scale-150"
+          ></div>
+        </div>
       </div>
     </div>
 
@@ -55,12 +62,11 @@
       :style="{ 'z-index': index === currentSection ? 10 : 5 }"
     >
       <div
-        class="z-40 absolute left-5 transform sm:left-1/4 top-1/2 animate-from-top"
+        class="z-40 absolute left-0 ml-28 transform top-1/2 animate-from-top -translate-y-1/2"
         :id="'section-content-' + index"
       >
         <NuxtLink :to="'/film/' + index">
           <div id="title" class="flex cursor-pointer animate_underline">
-            <!-- Ajouter style="opacity: 0;" -->
             <h1
               class="z-50 hero glitch layers brandname"
               :data-text="work.brand"
@@ -90,7 +96,6 @@
           id="crew"
           style="opacity: 0"
         >
-          <!-- Ajouter style="opacity: 0;" -->
           {{ work.crew }}
         </h2>
       </div>
@@ -278,6 +283,13 @@ const hideLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
 };
 
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === "ArrowDown") {
+    nextSection();
+  } else if (event.key === "ArrowUp") {
+    previousSection();
+  }
+};
 onMounted(() => {
   const sections = document.querySelectorAll("section");
   sections.forEach((section, index) => {
@@ -313,6 +325,14 @@ onMounted(() => {
     tolerance: 10,
     preventDefault: true,
   });
+
+  // Add keydown event listener
+  window.addEventListener("keydown", handleKeydown);
+});
+
+onUnmounted(() => {
+  // Remove keydown event listener
+  window.removeEventListener("keydown", handleKeydown);
 });
 </script>
 <style scoped>

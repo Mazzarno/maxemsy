@@ -6,7 +6,7 @@
       >
         <NuxtLink
           to="/"
-          class="z-50 ml-3 flex layer title-font font-medium items-center mb-4 md:mb-0 animate_underline"
+          class="z-50 flex layer title-font font-medium items-center mb-4 md:mb-0 animate_underline"
         >
           <h2 class="hero glitch layers" data-text="Maxime CARO">
             <span>Maxime CARO</span>
@@ -19,7 +19,7 @@
 
     <transition name="fade">
       <footer
-        v-show="showFooter"
+        v-show="projectsStore.showName"
         class="bg-transparent w-screen bottom-0 fixed z-50"
       >
         <div
@@ -31,7 +31,7 @@
             class="flex title-font font-medium items-center md:justify-start justify-center ice-cream"
           >
             <h2
-              class="ml-3 text-lg hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:text-[#ff0000]"
+              class="text-lg hero glitch layers transition ease-in-out delay-150 hover:animate-pulse hover:text-[#ff0000]"
               data-text="Ice Cream"
             >
               <span class="hover:text-[#ff0000]"> Ice Cream </span>
@@ -46,7 +46,7 @@
             class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start"
           >
             <a
-              class="ml-3 text-gray-400"
+              class="text-gray-400"
               href="https://www.instagram.com/maxime___caro/"
               target="_blank"
             >
@@ -65,20 +65,13 @@
 </template>
 
 <script setup>
-const showFooter = ref(true);
-let mouseTimeout;
-
-const handleMouseMove = () => {
-  showFooter.value = true;
-  clearTimeout(mouseTimeout);
-  mouseTimeout = setTimeout(() => {
-    showFooter.value = false;
-  }, 3000);
-};
-
+import { useProjectsStore } from "@/store/projects";
+const projectsStore = useProjectsStore();
 onMounted(() => {
-  window.addEventListener("mousemove", handleMouseMove);
-  handleMouseMove();
+  projectsStore.initMouseMoveListener(); // Démarrer le listener
+});
+onUnmounted(() => {
+  projectsStore.removeMouseMoveListener(); // Nettoyer le listener
 });
 </script>
 

@@ -5,7 +5,7 @@
         class="container mx-24 flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
         <transition name="fade">
-          <div v-show="showName">
+          <div v-show="projectsStore.showName">
             <NuxtLink
               to="/"
               class="z-50 flex layer title-font font-medium items-center mb-4 md:mb-0"
@@ -57,16 +57,7 @@ import { useProjectsStore } from "@/store/projects";
 const $route = useRoute();
 const projectsStore = useProjectsStore();
 const currentProject = ref(null);
-const showName = ref(true);
-let mouseTimeout;
 
-const handleMouseMove = () => {
-  showName.value = true;
-  clearTimeout(mouseTimeout);
-  mouseTimeout = setTimeout(() => {
-    showName.value = false;
-  }, 2400);
-};
 onMounted(() => {
   const index = $route.params.slug;
   const project = projectsStore.projects.works.data[index];
@@ -74,8 +65,10 @@ onMounted(() => {
     currentProject.value = project;
     projectsStore.setCurrentProject(project);
   }
-  window.addEventListener("mousemove", handleMouseMove);
-  handleMouseMove(); // Ensure footer is visible on initial load
+  projectsStore.initMouseMoveListener(); // Démarrer le listener
+});
+onUnmounted(() => {
+  projectsStore.removeMouseMoveListener(); // Nettoyer le listener
 });
 </script>
 
