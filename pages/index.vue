@@ -2,7 +2,7 @@
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
     <!-- Dots Navigation -->
     <div
-      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col space-y-7 z-50 m-5 hidden md:flex"
+      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col space-y-8 z-50 hidden md:flex"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
@@ -40,7 +40,7 @@
               'bg-slate-800': currentSection === index,
               'bg-white': currentSection !== index,
             }"
-            class="dot w-1.5 h-1.5 rounded-full transition-transform duration-300 hover:scale-150"
+            class="dot w-1 h-1 rounded-full transition-transform duration-300 hover:scale-150"
           ></div>
         </div>
       </div>
@@ -64,7 +64,7 @@
       :style="{ 'z-index': index === currentSection ? 10 : 5 }"
     >
       <div
-        class="z-40 absolute left-0 ml-28 transform top-1/2 animate-from-top -translate-y-1/2"
+        class="z-40 absolute left-0 ml-5 md:ml-20 transform top-1/2 animate-from-top -translate-y-1/2"
         :id="'section-content-' + index"
       >
         <NuxtLink :to="'/film/' + index">
@@ -114,7 +114,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from "vue";
+import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
 import { useProjectsStore } from "@/store/projects";
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
@@ -125,6 +125,8 @@ const progressHeight = ref(0);
 let autoScrollInterval: number;
 let progressInterval: number;
 let isTransitioning = false;
+
+let startY = 0;
 
 const animateText = (index: number, direction: string, action: string) => {
   const title = document.querySelector(`#section-content-${index} #title`);
@@ -272,8 +274,6 @@ const resetAutoScroll = () => {
   }, 10);
 };
 
-// Watch for changes in currentSection to reset auto scroll
-
 const showLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
 };
@@ -289,6 +289,25 @@ const handleKeydown = (event: KeyboardEvent) => {
     previousSection();
   }
 };
+
+// Handle touch events
+const handleTouchStart = (event: TouchEvent) => {
+  startY = event.touches[0].clientY;
+};
+
+const handleTouchEnd = (event: TouchEvent) => {
+  const endY = event.changedTouches[0].clientY;
+  const deltaY = endY - startY;
+
+  if (deltaY < -10) {
+    // Swipe up
+    nextSection();
+  } else if (deltaY > 10) {
+    // Swipe down
+    previousSection();
+  }
+};
+
 onMounted(() => {
   const sections = document.querySelectorAll("section");
   sections.forEach((section, index) => {
@@ -327,11 +346,17 @@ onMounted(() => {
 
   // Add keydown event listener
   window.addEventListener("keydown", handleKeydown);
+
+  // Add touch event listeners
+  window.addEventListener("touchstart", handleTouchStart);
+  window.addEventListener("touchend", handleTouchEnd);
 });
 
 onUnmounted(() => {
   // Remove keydown event listener
   window.removeEventListener("keydown", handleKeydown);
+  window.removeEventListener("touchstart", handleTouchStart);
+  window.removeEventListener("touchend", handleTouchEnd);
 });
 </script>
 <style scoped>
@@ -340,7 +365,7 @@ onUnmounted(() => {
 .video::-o-media-controls,
 .video::-ms-media-controls {
   display: none !important;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .section {

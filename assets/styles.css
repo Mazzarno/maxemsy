@@ -3,10 +3,10 @@
 @tailwind utilities;
 @layer base {
   .brandname {
-    @apply text-xl text-white text-left sm:text-4xl;
+    @apply text-lg text-white text-left sm:text-4xl;
   }
   .prodcrew {
-    @apply text-lg text-slate-200 text-left sm:text-2xl;
+    @apply text-base text-slate-200 text-left sm:text-2xl;
   }
 }
 @layer components {
