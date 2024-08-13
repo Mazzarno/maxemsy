@@ -2,31 +2,33 @@
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
     <!-- Dots Navigation -->
     <div
-      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col items-center space-y-5 z-50 m-5 hidden md:flex"
+      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col space-y-7 z-50 m-5 hidden md:flex"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
         :key="`dot-${index}`"
         class="relative flex items-center"
+        @click="scrollToSection(index, 'down')"
       >
-        <!-- Trigger Area with Larger Margin Left -->
+        <!-- Trigger Area with Padding -->
         <div
-          class="flex items-center cursor-pointer"
           @mouseover="showLabel(index)"
           @mouseleave="hideLabel(index)"
-          style="margin-left: 2rem"
+          class="relative cursor-pointer"
+          style="padding-left: 2rem"
         >
           <!-- Dot Label -->
           <div
             :id="`dot-label-${index}`"
-            class="absolute right-full opacity-0 whitespace-nowrap text-white mr-4"
+            class="absolute right-8 opacity-0 whitespace-nowrap text-white -top-2.5"
+            style="white-space: nowrap"
           >
-            <h4 class="z-50 hero glitch" :data-text="work.brand">
+            <h4 class="z-50 hero glitch inline-block" :data-text="work.brand">
               <span>{{ work.brand }}</span>
             </h4>
             <h4
               v-if="work.name"
-              class="z-50 hero glitch"
+              class="z-50 hero glitch inline-block"
               :data-text="`&nbsp;- ${work.name}`"
             >
               <span>{{ `&nbsp;- ${work.name}` }}</span>
@@ -193,7 +195,7 @@ const animateDots = (index: number) => {
     const isActive = dotIndex === index;
     $gsap.to(dot, {
       backgroundColor: isActive ? "#1e293b" : "#ffffff",
-      duration: 0.5,
+      duration: 0.1,
     });
   });
 };
@@ -230,17 +232,17 @@ const scrollToSection = (index: number, direction: string) => {
       $gsap.to(nextElement, {
         opacity: 1,
         duration: 1,
-        delay: 1, // Delay for 1 second before the next text animations
+        onStart: async () => {
+          animateDots(index); // Appel de l'animation des dots ici
+          resetAutoScroll();
+        },
         onComplete: async () => {
           await nextTick();
           animateText(index, direction, "in");
-          animateDots(index); // Appel de l'animation des dots ici
           isTransitioning = false;
         },
       });
     }
-
-    resetAutoScroll();
   });
 };
 
@@ -271,9 +273,6 @@ const resetAutoScroll = () => {
 };
 
 // Watch for changes in currentSection to reset auto scroll
-watch(currentSection, () => {
-  resetAutoScroll();
-});
 
 const showLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
@@ -313,8 +312,8 @@ onMounted(() => {
   resetAutoScroll();
 
   // Initial animation on page load
-  animateText(currentSection.value, "down", "in");
   animateDots(currentSection.value); // Appel initial de l'animation des dots
+  animateText(currentSection.value, "down", "in");
 
   // Create the Observer for scroll and touch events
   $Observer.create({
