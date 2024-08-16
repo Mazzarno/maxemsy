@@ -187,9 +187,10 @@ projects: {
         path: "film/socios",
       },
     ],
-  },
-showName: true,  // État global pour afficher/masquer le nom
-},
+      },
+    },
+    autoScrollEnabled: false,
+    showName: true,  // État global pour afficher/masquer le nom
     currentProject: {},
   }),
    actions: {
@@ -213,7 +214,9 @@ showName: true,  // État global pour afficher/masquer le nom
       window.addEventListener("mousemove", this.handleMouseMove);
       this.handleMouseMove(); // Assure que le nom est visible au chargement
     },
-
+   toggleAutoScroll() {
+      this.autoScrollEnabled = true;
+    },
     // Action pour nettoyer le listener lorsque ce n'est plus nécessaire
     removeMouseMoveListener() {
       window.removeEventListener("mousemove", this.handleMouseMove);

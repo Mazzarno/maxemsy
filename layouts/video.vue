@@ -2,22 +2,19 @@
   <div class="scroll-smooth">
     <nav class="bg-transparent fixed w-screen top-0 z-50">
       <div
-        class="container mx-24 flex flex-wrap p-5 flex-col md:flex-row items-center"
+        class="container md:ml-20 flex flex-wrap m-5 flex-col md:flex-row items-center"
       >
         <transition name="fade">
-          <div v-show="projectsStore.showName">
+          <div v-show="projectsStore.showName" class="md:block">
             <NuxtLink
               to="/"
-              class="z-50 flex layer title-font font-medium items-center mb-4 md:mb-0"
+              class="z-50 flex layer title-font font-medium items-center animate_underline"
             >
-              <h2
-                class="hero glitch layers animate_underline"
-                data-text="Maxime CARO"
-              >
+              <h2 class="hero glitch layers" data-text="Maxime CARO">
                 <span class="animate_underline">Maxime CARO</span>
               </h2>
             </NuxtLink>
-            <div class="flex mt-5">
+            <div class="hidden mt-5 md:flex">
               <h1
                 class="text-xl text-white glitch hero"
                 :data-text="currentProject?.brand"
@@ -33,13 +30,13 @@
               </h2>
             </div>
             <h2
-              class="text-lg text-white glitch hero"
+              class="text-lg text-white glitch hero hidden md:flex"
               :data-text="currentProject?.production"
             >
               <span>{{ currentProject?.production }}</span>
             </h2>
             <h2
-              class="text-lg text-white glitch hero"
+              class="text-lg text-white glitch hero hidden md:flex"
               :data-text="currentProject?.crew"
             >
               <span>{{ currentProject?.crew }}</span>
@@ -65,10 +62,10 @@ onMounted(() => {
     currentProject.value = project;
     projectsStore.setCurrentProject(project);
   }
-  projectsStore.initMouseMoveListener(); // Démarrer le listener
+  projectsStore.initMouseMoveListener();
 });
 onUnmounted(() => {
-  projectsStore.removeMouseMoveListener(); // Nettoyer le listener
+  projectsStore.removeMouseMoveListener();
 });
 </script>
 

@@ -1,16 +1,55 @@
 <template>
-  <div class="h-screen w-screen">
-    <div
-      class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-    >
-      <NuxtLink
-        to="/"
-        class="z-50 ml-3 flex layer title-font font-medium items-center mb-4 md:mb-0 animate_underline"
-      >
-        <h2 class="hero glitch layers" data-text="Maxime CARO">
-          <span>Maxime CARO</span>
-        </h2>
-      </NuxtLink>
+  <div class="loading-container">
+    <div class="loading-content">
+      <h2>Chargement...</h2>
+      <div class="loader">
+        <div class="loader-bar" :style="{ width: progress + '%' }"></div>
+      </div>
+      <p>{{ progress }}%</p>
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  progress: {
+    type: Number,
+    required: true,
+  },
+});
+</script>
+
+<style scoped>
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  text-align: center;
+  color: white;
+}
+
+.loader {
+  width: 80%;
+  height: 10px;
+  background-color: white;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.loader-bar {
+  height: 100%;
+  background-color: #ff6347;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+</style>

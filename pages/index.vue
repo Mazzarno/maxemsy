@@ -114,7 +114,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
+import { ref, onMounted, nextTick, onUnmounted } from "vue";
 import { useProjectsStore } from "@/store/projects";
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
@@ -125,7 +125,6 @@ const progressHeight = ref(0);
 let autoScrollInterval: number;
 let progressInterval: number;
 let isTransitioning = false;
-
 let startY = 0;
 
 const animateText = (index: number, direction: string, action: string) => {
@@ -247,7 +246,6 @@ const scrollToSection = (index: number, direction: string) => {
     }
   });
 };
-
 const nextSection = () => {
   if (currentSection.value < works.length - 1) {
     scrollToSection(currentSection.value + 1, "down");
@@ -255,33 +253,30 @@ const nextSection = () => {
     scrollToSection(0, "down"); // Scroll back to the first section
   }
 };
-
 const previousSection = () => {
   if (currentSection.value > 0) {
     scrollToSection(currentSection.value - 1, "up");
   }
 };
-
 const resetAutoScroll = () => {
   clearInterval(autoScrollInterval);
   clearInterval(progressInterval);
   progressHeight.value = 0;
-  autoScrollInterval = setInterval(nextSection, 10000);
-  progressInterval = setInterval(() => {
-    if (progressHeight.value < 100) {
-      progressHeight.value += 0.1; // Adjust the speed of progress bar increase
-    }
-  }, 10);
+  if (projectsStore.autoScrollEnabled) {
+    autoScrollInterval = setInterval(nextSection, 10000);
+    progressInterval = setInterval(() => {
+      if (progressHeight.value < 100) {
+        progressHeight.value += 0.1;
+      }
+    }, 10);
+  }
 };
-
 const showLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
 };
-
 const hideLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
 };
-
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.key === "ArrowDown") {
     nextSection();
@@ -289,16 +284,12 @@ const handleKeydown = (event: KeyboardEvent) => {
     previousSection();
   }
 };
-
-// Handle touch events
 const handleTouchStart = (event: TouchEvent) => {
   startY = event.touches[0].clientY;
 };
-
-const handleTouchEnd = (event: TouchEvent) => {
+const handleTouchMove = (event: TouchEvent) => {
   const endY = event.changedTouches[0].clientY;
   const deltaY = endY - startY;
-
   if (deltaY < -10) {
     // Swipe up
     nextSection();
@@ -307,7 +298,6 @@ const handleTouchEnd = (event: TouchEvent) => {
     previousSection();
   }
 };
-
 onMounted(() => {
   const sections = document.querySelectorAll("section");
   sections.forEach((section, index) => {
@@ -315,26 +305,8 @@ onMounted(() => {
       section.style.display = "none";
     }
   });
-
-  const videos = document.querySelectorAll(".video");
-  const videoObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.play();
-      } else {
-        entry.target.pause();
-      }
-    });
-  });
-  videos.forEach((video) => videoObserver.observe(video));
-
-  resetAutoScroll();
-
-  // Initial animation on page load
-  animateDots(currentSection.value); // Appel initial de l'animation des dots
+  animateDots(currentSection.value);
   animateText(currentSection.value, "down", "in");
-
-  // Create the Observer for scroll and touch events
   $Observer.create({
     target: window,
     type: "wheel,touch,scroll",
@@ -343,20 +315,16 @@ onMounted(() => {
     tolerance: 10,
     preventDefault: true,
   });
-
-  // Add keydown event listener
   window.addEventListener("keydown", handleKeydown);
-
-  // Add touch event listeners
   window.addEventListener("touchstart", handleTouchStart);
-  window.addEventListener("touchend", handleTouchEnd);
+  window.addEventListener("touchmove", handleTouchMove);
+  resetAutoScroll();
 });
 
 onUnmounted(() => {
-  // Remove keydown event listener
   window.removeEventListener("keydown", handleKeydown);
   window.removeEventListener("touchstart", handleTouchStart);
-  window.removeEventListener("touchend", handleTouchEnd);
+  window.removeEventListener("touchmove", handleTouchMove);
 });
 </script>
 <style scoped>
