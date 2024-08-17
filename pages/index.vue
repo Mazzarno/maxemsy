@@ -15,13 +15,13 @@
           @mouseover="showLabel(index)"
           @mouseleave="hideLabel(index)"
           class="relative cursor-pointer"
-          style="padding-left: 2rem"
+          style="padding-left: 2rem;"
         >
           <!-- Dot Label -->
           <div
             :id="`dot-label-${index}`"
             class="absolute right-8 opacity-0 whitespace-nowrap text-white -top-2.5"
-            style="white-space: nowrap"
+            style="white-space: nowrap;"
           >
             <h4 class="z-50 hero glitch inline-block" :data-text="work.brand">
               <span>{{ work.brand }}</span>
@@ -88,7 +88,7 @@
           v-if="work.production"
           class="layers indextext prodcrew"
           id="production"
-          style="opacity: 0"
+          style="opacity: 0;"
         >
           {{ work.production }}
         </h2>
@@ -96,7 +96,7 @@
           v-if="work.crew"
           class="z-50 layers indextext prodcrew"
           id="crew"
-          style="opacity: 0"
+          style="opacity: 0;"
         >
           {{ work.crew }}
         </h2>
@@ -114,218 +114,217 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, nextTick, onUnmounted } from "vue";
-import { useProjectsStore } from "@/store/projects";
-const projectsStore = useProjectsStore();
-const works = projectsStore.projects.works.data;
-const { $gsap, $Observer } = useNuxtApp();
+import { ref, onMounted, nextTick, onUnmounted } from 'vue'
+import { useProjectsStore } from '@/store/projects'
+const projectsStore = useProjectsStore()
+const works = projectsStore.projects.works.data
+const { $gsap, $Observer } = useNuxtApp()
 
-const currentSection = ref(0);
-const progressHeight = ref(0);
-let autoScrollInterval: number;
-let progressInterval: number;
-let isTransitioning = false;
-let startY = 0;
+const currentSection = ref(0)
+const progressHeight = ref(0)
+let autoScrollInterval: number
+let progressInterval: number
+let isTransitioning = false
+let startY = 0
 
 const animateText = (index: number, direction: string, action: string) => {
-  const title = document.querySelector(`#section-content-${index} #title`);
+  const title = document.querySelector(`#section-content-${index} #title`)
   const production = document.querySelector(
-    `#section-content-${index} #production`
-  );
-  const crew = document.querySelector(`#section-content-${index} #crew`);
+    `#section-content-${index} #production`,
+  )
+  const crew = document.querySelector(`#section-content-${index} #crew`)
 
-  const timeline = $gsap.timeline();
+  const timeline = $gsap.timeline()
 
-  if (action === "in") {
-    if (direction === "down") {
+  if (action === 'in') {
+    if (direction === 'down') {
       timeline.fromTo(
         title,
         { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5 }
-      );
+        { y: 0, opacity: 1, duration: 0.5 },
+      )
       timeline.fromTo(
         production,
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5 },
-        "-=0.25"
-      );
+        '-=0.25',
+      )
       timeline.fromTo(
         crew,
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5 },
-        "-=0.25"
-      );
+        '-=0.25',
+      )
     } else {
       timeline.fromTo(
         crew,
         { y: -50, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5 },
-        "-=0.25"
-      );
+        '-=0.25',
+      )
       timeline.fromTo(
         production,
         { y: -50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5 }
-      );
+        { y: 0, opacity: 1, duration: 0.5 },
+      )
       timeline.fromTo(
         title,
         { y: -50, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5 },
-        "-=0.25"
-      );
+        '-=0.25',
+      )
     }
   } else {
-    if (direction === "down") {
-      timeline.to(title, { y: -50, opacity: 0, duration: 0.5 });
-      timeline.to(production, { y: -50, opacity: 0, duration: 0.5 }, "-=0.25");
-      timeline.to(crew, { y: -50, opacity: 0, duration: 0.5 }, "-=0.25");
+    if (direction === 'down') {
+      timeline.to(title, { y: -50, opacity: 0, duration: 0.5 })
+      timeline.to(production, { y: -50, opacity: 0, duration: 0.5 }, '-=0.25')
+      timeline.to(crew, { y: -50, opacity: 0, duration: 0.5 }, '-=0.25')
     } else {
-      timeline.to(crew, { y: 50, opacity: 0, duration: 0.5 }, "-=0.25");
-      timeline.to(production, { y: 50, opacity: 0, duration: 0.5 });
-      timeline.to(title, { y: 50, opacity: 0, duration: 0.5 }, "-=0.25");
+      timeline.to(crew, { y: 50, opacity: 0, duration: 0.5 }, '-=0.25')
+      timeline.to(production, { y: 50, opacity: 0, duration: 0.5 })
+      timeline.to(title, { y: 50, opacity: 0, duration: 0.5 }, '-=0.25')
     }
   }
-
-  return timeline;
-};
+  return timeline
+}
 
 const animateDots = (index: number) => {
-  const dots = document.querySelectorAll(".dot");
+  const dots = document.querySelectorAll('.dot')
 
   dots.forEach((dot, dotIndex) => {
-    const isActive = dotIndex === index;
+    const isActive = dotIndex === index
     $gsap.to(dot, {
-      backgroundColor: isActive ? "#1e293b" : "#ffffff",
+      backgroundColor: isActive ? '#1e293b' : '#ffffff',
       duration: 0.1,
-    });
-  });
-};
+    })
+  })
+}
 
 const scrollToSection = (index: number, direction: string) => {
-  if (isTransitioning || index === currentSection.value) return;
+  if (isTransitioning || index === currentSection.value) return
 
-  isTransitioning = true;
+  isTransitioning = true
 
-  const outTimeline = animateText(currentSection.value, direction, "out");
+  const outTimeline = animateText(currentSection.value, direction, 'out')
 
-  outTimeline.eventCallback("onComplete", () => {
+  outTimeline.eventCallback('onComplete', () => {
     const currentElement = document.getElementById(
-      `section-${currentSection.value}`
-    );
-    const nextElement = document.getElementById(`section-${index}`);
+      `section-${currentSection.value}`,
+    )
+    const nextElement = document.getElementById(`section-${index}`)
 
     if (currentElement && nextElement) {
-      nextElement.style.display = "flex";
-      nextElement.style.opacity = "0";
-      nextElement.style.zIndex = "10";
+      nextElement.style.display = 'flex'
+      nextElement.style.opacity = '0'
+      nextElement.style.zIndex = '10'
 
       $gsap.to(currentElement, {
         opacity: 0,
         duration: 1,
         onComplete: () => {
-          currentElement.style.zIndex = "5";
-          currentSection.value = index;
-          currentElement.style.display = "none";
-          currentElement.style.opacity = "1";
+          currentElement.style.zIndex = '5'
+          currentSection.value = index
+          currentElement.style.display = 'none'
+          currentElement.style.opacity = '1'
         },
-      });
+      })
 
       $gsap.to(nextElement, {
         opacity: 1,
         duration: 1,
         onStart: async () => {
-          animateDots(index); // Appel de l'animation des dots ici
-          resetAutoScroll();
+          animateDots(index) // Appel de l'animation des dots ici
+          resetAutoScroll()
         },
         onComplete: async () => {
-          await nextTick();
-          animateText(index, direction, "in");
-          isTransitioning = false;
+          await nextTick()
+          animateText(index, direction, 'in')
+          isTransitioning = false
         },
-      });
+      })
     }
-  });
-};
+  })
+}
 const nextSection = () => {
   if (currentSection.value < works.length - 1) {
-    scrollToSection(currentSection.value + 1, "down");
+    scrollToSection(currentSection.value + 1, 'down')
   } else {
-    scrollToSection(0, "down"); // Scroll back to the first section
+    scrollToSection(0, 'down') // Scroll back to the first section
   }
-};
+}
 const previousSection = () => {
   if (currentSection.value > 0) {
-    scrollToSection(currentSection.value - 1, "up");
+    scrollToSection(currentSection.value - 1, 'up')
   }
-};
+}
 const resetAutoScroll = () => {
-  clearInterval(autoScrollInterval);
-  clearInterval(progressInterval);
-  progressHeight.value = 0;
+  clearInterval(autoScrollInterval)
+  clearInterval(progressInterval)
+  progressHeight.value = 0
   if (projectsStore.autoScrollEnabled) {
-    autoScrollInterval = setInterval(nextSection, 10000);
+    autoScrollInterval = setInterval(nextSection, 10000)
     progressInterval = setInterval(() => {
       if (progressHeight.value < 100) {
-        progressHeight.value += 0.1;
+        progressHeight.value += 0.1
       }
-    }, 10);
+    }, 10)
   }
-};
+}
 const showLabel = (index: number) => {
-  $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
-};
+  $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 })
+}
 const hideLabel = (index: number) => {
-  $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
-};
+  $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 })
+}
 const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "ArrowDown") {
-    nextSection();
-  } else if (event.key === "ArrowUp") {
-    previousSection();
+  if (event.key === 'ArrowDown') {
+    nextSection()
+  } else if (event.key === 'ArrowUp') {
+    previousSection()
   }
-};
+}
 const handleTouchStart = (event: TouchEvent) => {
-  startY = event.touches[0].clientY;
-};
+  startY = event.touches[0].clientY
+}
 const handleTouchMove = (event: TouchEvent) => {
-  const endY = event.changedTouches[0].clientY;
-  const deltaY = endY - startY;
+  const endY = event.changedTouches[0].clientY
+  const deltaY = endY - startY
   if (deltaY < -10) {
     // Swipe up
-    nextSection();
+    nextSection()
   } else if (deltaY > 10) {
     // Swipe down
-    previousSection();
+    previousSection()
   }
-};
+}
 onMounted(() => {
-  const sections = document.querySelectorAll("section");
+  const sections = document.querySelectorAll('section')
   sections.forEach((section, index) => {
     if (index !== currentSection.value) {
-      section.style.display = "none";
+      section.style.display = 'none'
     }
-  });
-  animateDots(currentSection.value);
-  animateText(currentSection.value, "down", "in");
+  })
+  animateDots(currentSection.value)
+  animateText(currentSection.value, 'down', 'in')
   $Observer.create({
     target: window,
-    type: "wheel,touch,scroll",
+    type: 'wheel,touch,scroll',
     onUp: previousSection,
     onDown: nextSection,
     tolerance: 10,
     preventDefault: true,
-  });
-  window.addEventListener("keydown", handleKeydown);
-  window.addEventListener("touchstart", handleTouchStart);
-  window.addEventListener("touchmove", handleTouchMove);
-  resetAutoScroll();
-});
+  })
+  window.addEventListener('keydown', handleKeydown)
+  window.addEventListener('touchstart', handleTouchStart)
+  window.addEventListener('touchmove', handleTouchMove)
+  resetAutoScroll()
+})
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeydown);
-  window.removeEventListener("touchstart", handleTouchStart);
-  window.removeEventListener("touchmove", handleTouchMove);
-});
+  window.removeEventListener('keydown', handleKeydown)
+  window.removeEventListener('touchstart', handleTouchStart)
+  window.removeEventListener('touchmove', handleTouchMove)
+})
 </script>
 <style scoped>
 .video::-webkit-media-controls,

@@ -11,22 +11,21 @@
 </template>
 <script setup lang="ts">
 definePageMeta({
-  layout: "video",
-});
-import { useProjectsStore } from "@/store/projects";
-const $route = useRoute();
-const projectsStore = useProjectsStore();
-const currentProject = ref(null);
-const showName = ref(true);
+  layout: 'video',
+})
+import { useProjectsStore } from '@/store/projects'
+const $route = useRoute()
+const projectsStore = useProjectsStore()
+const currentProject = ref(null)
 
 onMounted(() => {
-  const index = $route.params.slug;
-  const project = projectsStore.projects.works.data[index];
+  const index = $route.params.slug
+  const project = projectsStore.projects.works.data[index]
   if (project) {
-    currentProject.value = project;
-    projectsStore.setCurrentProject(project);
+    currentProject.value = project
+    projectsStore.setCurrentProject(project)
   }
-});
+})
 </script>
 <style scoped>
 video::-webkit-media-controls,
