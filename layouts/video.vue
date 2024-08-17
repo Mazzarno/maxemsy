@@ -1,15 +1,15 @@
 <template>
   <div class="scroll-smooth">
-    <nav class="bg-transparent fixed w-screen top-0 z-50">
+    <nav class="bg-transparent md:fixed md:z-50 flex w-screen top-0">
       <div
-        class="container md:ml-20 flex flex-wrap m-5 flex-col md:flex-row items-center"
+        class="md:ml-20 flex flex-wrap m-5 flex-col md:flex-row items-center"
       >
         <transition name="fade">
-          <div v-show="projectsStore.showName" class="md:block">
-            <NuxtLink
-              to="/"
-              class="z-50 flex layer title-font font-medium items-center animate_underline"
-            >
+          <div
+            v-show="projectsStore.showName"
+            class="md:block z-50 flex layer title-font font-medium"
+          >
+            <NuxtLink to="/">
               <h2 class="hero glitch layers" data-text="Maxime CARO">
                 <span class="animate_underline">Maxime CARO</span>
               </h2>

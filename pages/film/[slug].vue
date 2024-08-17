@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen w-screen relative">
-    <div class="aspect-video w-screen h-screen">
+  <div class="h-full w-full relative">
+    <div class="aspect-video h-full w-full">
       <video
         class="w-full h-full fixed md:block"
         controls
@@ -11,21 +11,21 @@
 </template>
 <script setup lang="ts">
 definePageMeta({
-  layout: 'video',
-})
-import { useProjectsStore } from '@/store/projects'
-const $route = useRoute()
-const projectsStore = useProjectsStore()
-const currentProject = ref(null)
+  layout: "video",
+});
+import { useProjectsStore } from "@/store/projects";
+const $route = useRoute();
+const projectsStore = useProjectsStore();
+const currentProject = ref(null);
 
 onMounted(() => {
-  const index = $route.params.slug
-  const project = projectsStore.projects.works.data[index]
+  const index = $route.params.slug;
+  const project = projectsStore.projects.works.data[index];
   if (project) {
-    currentProject.value = project
-    projectsStore.setCurrentProject(project)
+    currentProject.value = project;
+    projectsStore.setCurrentProject(project);
   }
-})
+});
 </script>
 <style scoped>
 video::-webkit-media-controls,
