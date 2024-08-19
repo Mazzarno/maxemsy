@@ -18,7 +18,7 @@
     <transition name="fade">
       <footer class="bg-transparent w-full bottom-0 fixed z-50">
         <div
-          class="m-5 md:ml-20 mx-auto flex items-center sm:flex-row flex-col"
+          class="mb-2 md:ml-20 mx-auto flex items-center sm:flex-row flex-col"
         >
           <a
             href="https://www.ice-cream.tv/"
@@ -36,7 +36,7 @@
             class="text-base text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:py-2 sm:mt-0 mt-4 hidden md:flex"
           >
             <a
-              class="text-gray-400 mt-1"
+              class="text-white mt-1"
               href="https://www.instagram.com/maxime___caro/"
               target="_blank"
             >
