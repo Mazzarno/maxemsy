@@ -4,8 +4,7 @@ export const useProjectsStore = defineStore('projects', {
   state: () => ({
 projects: {
   works: {
-    enable: true,
-    data: [
+  data: [
       {
         id: 1,
         brand: "Audemars Piguet",

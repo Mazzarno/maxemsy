@@ -2,7 +2,7 @@
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
     <!-- Dots Navigation -->
     <div
-      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col space-y-8 z-50 hidden md:flex"
+      class="fixed top-1/2 right-10 transform -translate-y-1/2 flex-col md:space-y-8 z-50 hidden md:flex"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
@@ -107,6 +107,7 @@
         :src="work.preview"
         autoplay
         webkit-playsinline
+        playsinline
         loop
         :aria-label="work.brand"
       ></video>
@@ -125,8 +126,10 @@ const progressHeight = ref(0);
 let autoScrollInterval: number;
 let progressInterval: number;
 let isTransitioning = false;
-let startY = 0;
 let isAnimatingText = false; // Flag to check if text animation is ongoing
+
+// Variables to store the touch position
+let startY = 0;
 
 const animateText = (index: number, direction: string, action: string) => {
   const title = document.querySelector(`#section-content-${index} #title`);
@@ -292,21 +295,10 @@ const hideLabel = (index: number) => {
   $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
 };
 
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "ArrowDown") {
-    nextSection();
-  } else if (event.key === "ArrowUp") {
-    previousSection();
-  }
-};
-
-const handleTouchStart = (event: TouchEvent) => {
-  startY = event.touches[0].clientY;
-};
-
+// Handle touch events with touchmove only
 const handleTouchMove = (event: TouchEvent) => {
-  const endY = event.changedTouches[0].clientY;
-  const deltaY = endY - startY;
+  const deltaY = event.touches[0].clientY - startY;
+
   if (deltaY < -10) {
     // Swipe up
     nextSection();
@@ -316,6 +308,14 @@ const handleTouchMove = (event: TouchEvent) => {
   }
 };
 
+const handleTouchStart = (event: TouchEvent) => {
+  startY = event.touches[0].clientY;
+};
+function setFullHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+
 onMounted(() => {
   const sections = document.querySelectorAll("section");
   sections.forEach((section, index) => {
@@ -323,35 +323,52 @@ onMounted(() => {
       section.style.display = "none";
     }
   });
+
   animateDots(currentSection.value);
   animateText(currentSection.value, "down", "in");
+
+  // Observer for mouse wheel and keyboard scroll
   $Observer.create({
     target: window,
-    type: "wheel,touch,scroll",
+    type: "wheel,scroll",
     onUp: previousSection,
     onDown: nextSection,
     tolerance: 10,
     preventDefault: true,
   });
-  window.addEventListener("keydown", handleKeydown);
+
+  // Touch events using touchmove
   window.addEventListener("touchstart", handleTouchStart);
   window.addEventListener("touchmove", handleTouchMove);
+
   resetAutoScroll();
+
+  // Initial setting
+  setFullHeight();
+
+  // Update the height on resize
+  window.addEventListener("resize", setFullHeight);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeydown);
   window.removeEventListener("touchstart", handleTouchStart);
   window.removeEventListener("touchmove", handleTouchMove);
+  window.removeEventListener("resize", setFullHeight);
 });
 </script>
 <style scoped>
+.video,
+body,
+html {
+  min-height: -webkit-fill-available !important;
+}
 .video::-webkit-media-controls,
 .video::-moz-media-controls,
 .video::-o-media-controls,
 .video::-ms-media-controls {
   display: none !important;
   pointer-events: none !important;
+  touch-action: none !important;
 }
 
 .section {
@@ -377,5 +394,9 @@ onUnmounted(() => {
 }
 .dot {
   transition: background-color 0.5s ease;
+}
+body,
+html {
+  touch-action: none !important;
 }
 </style>

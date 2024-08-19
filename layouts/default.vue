@@ -1,26 +1,5 @@
 <template>
   <div>
-    <transition name="fade" mode="out-in">
-      <div
-        v-if="loading"
-        key="loading-screen"
-        class="fixed inset-0 bg-black flex justify-center items-center z-1000"
-      >
-        <div
-          class="fixed inset-0 bg-black flex justify-center items-center z-1000"
-        >
-          <div class="text-center text-white">
-            <h2 class="text-xl hero glitch layers" data-text="Maxime CARO">
-              <span class="text-xl">Maxime CARO</span>
-            </h2>
-            <h2 class="text-lg hero glitch layers" data-text="Chargement ...">
-              <span class="text-lg">Chargement ...</span>
-            </h2>
-          </div>
-        </div>
-      </div>
-    </transition>
-
     <nav class="bg-transparent fixed w-full top-0 z-50">
       <div class="md:ml-20 flex flex-wrap m-5">
         <NuxtLink
@@ -62,7 +41,7 @@
               target="_blank"
             >
               <h2
-                class="hero glitch layers mdi-instagram mdi md:mdi-24px mdi-16px"
+                class="hero glitch layers mdi-instagram mdi mdi-24px"
                 data-text="Instagram"
               >
                 <span class="mdi-instagram mdi mdi-24px"></span>
@@ -78,59 +57,14 @@
     </transition>
   </div>
 </template>
-<script setup>
-import { useProjectsStore } from "@/store/projects";
-import { gsap } from "gsap";
-const projectsStore = useProjectsStore();
-const loading = ref(true);
-const progress = ref(0);
-
-onMounted(() => {
-  let loadedVideos = 0;
-  const videos = Array.from(document.querySelectorAll("video")).slice(0, 2);
-  const totalVideos = videos.length;
-  const updateProgress = () => {
-    loadedVideos++;
-    const newProgress = Math.floor((loadedVideos / totalVideos) * 100);
-    gsap.to(progress, {
-      value: newProgress,
-      duration: 0.5,
-      onUpdate: () => {
-        progress.value = Math.floor(progress.value);
-      },
-      onComplete: () => {
-        if (progress.value >= 100) {
-          // Attendre 1 seconde avant de passer loading à false
-          setTimeout(() => {
-            loading.value = false;
-            projectsStore.autoScrollEnabled = true;
-          }, 1000);
-        }
-      },
-    });
-  };
-
-  videos.forEach((video) => {
-    if (video.readyState >= 4) {
-      updateProgress();
-    } else {
-      video.addEventListener("canplaythrough", () => {
-        updateProgress();
-      });
-      video.addEventListener("error", () => {
-        updateProgress();
-      });
-    }
-  });
-});
-</script>
+<script setup></script>
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  @apply transition-opacity duration-1000; /* Transition sur 1 seconde */
+  transition: opacity 1s;
 }
-.fade-enter,
+.fade-enter-from,
 .fade-leave-to {
-  @apply opacity-0; /* Rendre invisible l'élément */
+  opacity: 0;
 }
 </style>

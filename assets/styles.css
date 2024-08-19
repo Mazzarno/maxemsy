@@ -35,22 +35,17 @@
   font-family: "Stolzl" !important;
 }
 
-html {
-  overscroll-behavior: none;
-}
 body,
 html {
   font-family: "Day Roman" !important;
   background-color: black;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scroll-behavior: smooth !important;
-  scroll-snap-type: y mandatory;
-  overflow: scroll;
-  overflow-x: hidden; /*FireFox*/
+  overflow: hidden !important;
   scrollbar-width: none;
-  /*IE10+*/
+  overscroll-behavior: none !important;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+  min-height: -webkit-fill-available !important;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
 }
 .fade-enter-active,
 .fade-leave-active {
