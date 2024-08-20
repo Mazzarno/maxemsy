@@ -276,15 +276,13 @@ const previousSection = () => {
 const resetAutoScroll = () => {
   clearInterval(autoScrollInterval);
   clearInterval(progressInterval);
-  if (projectsStore.autoScrollEnabled) {
-    progressHeight.value = 0;
-    autoScrollInterval = setInterval(nextSection, 10000);
-    progressInterval = setInterval(() => {
-      if (progressHeight.value < 100) {
-        progressHeight.value += 0.1;
-      }
-    }, 10);
-  }
+  progressHeight.value = 0;
+  autoScrollInterval = setInterval(nextSection, 10000);
+  progressInterval = setInterval(() => {
+    if (progressHeight.value < 100) {
+      progressHeight.value += 0.1; // Adjust the speed of progress bar increase
+    }
+  }, 10);
 };
 
 const showLabel = (index: number) => {

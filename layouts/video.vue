@@ -6,8 +6,13 @@
       >
         <div class="md:block z-50 flex layer title-font font-medium">
           <NuxtLink to="/">
-            <h2 class="hero glitch layers" data-text="Maxime CARO">
-              <span class="animate_underline">Maxime CARO</span>
+            <h2
+              class="hero glitch layers text-lg sm:text-xl tracking-widest font-semibold"
+              data-text="Maxime CARO"
+            >
+              <span class="text-lg sm:text-xl tracking-widest font-semibold"
+                >Maxime CARO</span
+              >
             </h2>
           </NuxtLink>
           <transition name="fade">
