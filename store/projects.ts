@@ -4,9 +4,8 @@ export const useProjectsStore = defineStore('projects', {
   state: () => ({
 projects: {
   works: {
-  data: [
+    data: [
       {
-        id: 1,
         brand: "Audemars Piguet",
         name: "Cactus Jack",
         production: "Thibault Grevet",
@@ -14,9 +13,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_audemars.mp4",
         film: "https://vxxnyr.n0c.world/films/film_audemars.mp4",
         path: "film/audemars_travis",
+        aria: "Audemars Piguet - Cactus Jack"
       },
       {
-        id: 2,
         brand: "Travis Scott",
         name: "God's Country",
         production: "Arnaud Bresson",
@@ -24,9 +23,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_godscountry.mp4",
         film: "https://vxxnyr.n0c.world/films/film_godscountry.mp4",
         path: "film/godscountry",
+        aria: "Travis Scott - God's Country"
       },
       {
-        id: 3,
         brand: "YSL",
         name: "Sakura",
         production: "Nathalie Canguilhem",
@@ -34,9 +33,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_sakura.mp4",
         film: "https://vxxnyr.n0c.world/films/film_sakura.mp4",
         path: "film/sakura",
+        aria: "YSL - Sakura"
       },
       {
-        id: 4,
         brand: "Sorare",
         name: "",
         production: "Valentin Petit",
@@ -44,9 +43,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_sorare.mp4",
         film: "https://vxxnyr.n0c.world/films/film_sorare.mp4",
         path: "film/sorare",
+        aria: "Sorare"
       },
       {
-        id: 5,
         brand: "Galeries Lafayette",
         name: "A quoi je rêve",
         production: "BRTHR",
@@ -54,9 +53,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_lafayette.mp4",
         film: "https://vxxnyr.n0c.world/films/film_lafayette.mp4",
         path: "film/lafayette",
+        aria: "Galeries Lafayette - A quoi je rêve"
       },
       {
-        id: 6,
         brand: "Perrier",
         name: "Vue en terrasse",
         production: "Thomas Lachambre",
@@ -64,9 +63,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_perrier.mp4",
         film: "https://vxxnyr.n0c.world/films/film_perrier.mp4",
         path: "film/perrier",
+        aria: "Perrier - Vue en terrasse"
       },
       {
-        id: 7,
         brand: "Adidas",
         name: "Forever",
         production: "Remi Besse",
@@ -74,9 +73,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_adidas_forever.mp4",
         film: "https://vxxnyr.n0c.world/films/film_adidas_forever.mp4",
         path: "film/adidas_forever",
+        aria: "Adidas - Forever"
       },
       {
-        id: 8,
         brand: "A$AP Ferg",
         name: "Floor Seats",
         production: "Valentin Petit",
@@ -84,9 +83,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_ferg.mp4",
         film: "https://vxxnyr.n0c.world/films/film_ferg.mp4",
         path: "film/ferg",
+        aria: "A$AP Ferg - Floor Seats"
       },
       {
-        id: 9,
         brand: "Bentley",
         name: "Continental GT",
         production: "Valentin Petit",
@@ -94,9 +93,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_bentley.mp4",
         film: "https://vxxnyr.n0c.world/films/film_bentley.mp4",
         path: "film/bentley_continental",
+        aria: "Bentley - Continental GT"
       },
       {
-        id: 10,
         brand: "Betclic",
         name: "Bascule dans le game",
         production: "Keith MacCarthy",
@@ -104,9 +103,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_betclic.mp4",
         film: "https://vxxnyr.n0c.world/films/film_betclic.mp4",
         path: "film/betclic",
+        aria: "Betclic - Bascule dans le game"
       },
       {
-        id: 11,
         brand: "Beabadoobee",
         name: "Last day on Earth",
         production: "Arnaud Bresson",
@@ -114,9 +113,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_beabadoobee.mp4",
         film: "https://vxxnyr.n0c.world/films/film_beabadoobee.mp4",
         path: "film/beabadoobee",
+        aria: "Beabadoobee - Last day on Earth"
       },
       {
-        id: 12,
         brand: "Ubisoft",
         name: "Rainsbow 6",
         production: "Pierre Davy",
@@ -124,9 +123,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_rainsbow6.mp4",
         film: "https://vxxnyr.n0c.world/films/film_rainsbow6.mp4",
         path: "film/rainsbow6",
+        aria: "Ubisoft - Rainsbow 6"
       },
       {
-        id: 13,
         brand: "Flatbush Zombies",
         name: "Afterlife",
         production: "Arnaud Bresson",
@@ -134,9 +133,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_flatbush.mp4",
         film: "https://vxxnyr.n0c.world/films/film_flatbush.mp4",
         path: "film/flatbush",
+        aria: "Flatbush Zombies - Afterlife"
       },
       {
-        id: 14,
         brand: "Adidas",
         name: "Paris la nuit",
         production: "Pierre Davy",
@@ -144,9 +143,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_adidas_paris.mp4",
         film: "https://vxxnyr.n0c.world/films/film_adidas_paris.mp4",
         path: "film/adidas_paris",
+        aria: "Adidas - Paris la nuit"
       },
       {
-        id: 15,
         brand: "Heetch",
         name: "Banlieue rose",
         production: "Valentin Petit",
@@ -154,9 +153,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_heetch.mp4",
         film: "https://vxxnyr.n0c.world/films/film_heetch.mp4",
         path: "film/heetch",
+        aria: "Heetch - Banlieue rose"
       },
       {
-        id: 16,
         brand: "Chanel",
         name: "Dreaming",
         production: "Thurstan Redding",
@@ -164,9 +163,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_chanel.mp4",
         film: "https://vxxnyr.n0c.world/films/film_chanel.mp4",
         path: "film/chanel",
+        aria: "Chanel - Dreaming"
       },
       {
-        id: 17,
         brand: "HP",
         name: "OMEN",
         production: "BRTHR",
@@ -174,9 +173,9 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_hp.mp4",
         film: "https://vxxnyr.n0c.world/films/film_hp.mp4",
         path: "film/hp_omen",
+        aria: "HP - OMEN"
       },
       {
-        id: 18,
         brand: "Socios",
         name: "Be more than a fan",
         production: "We are from LA",
@@ -184,10 +183,11 @@ projects: {
         preview: "https://vxxnyr.n0c.world/previews/preview_socios.mp4",
         film: "https://vxxnyr.n0c.world/films/film_socios.mp4",
         path: "film/socios",
-      },
-    ],
-      },
-    },
+        aria: "Socios - Be more than a fan"
+      }
+    ]
+  }
+},
     autoScrollEnabled: false,
     showName: true,  // État global pour afficher/masquer le nom
     currentProject: {},

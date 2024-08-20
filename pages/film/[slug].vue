@@ -1,6 +1,6 @@
 <template>
   <div class="h-full w-full relative">
-    <div class="aspect-video h-full w-full">
+    <div class="aspect-video h-full w-full" :aria-label="currentProject?.aria">
       <video
         class="w-full h-full fixed md:block"
         controls
@@ -16,7 +16,7 @@ definePageMeta({
 import { useProjectsStore } from "@/store/projects";
 const $route = useRoute();
 const projectsStore = useProjectsStore();
-const currentProject = ref(null);
+const currentProject = ref();
 
 onMounted(() => {
   const index = $route.params.slug;

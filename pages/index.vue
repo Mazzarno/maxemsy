@@ -36,6 +36,7 @@
           </div>
           <!-- Dot -->
           <div
+            :aria-label="'Navigation vers : ' + work.aria"
             :class="{
               'bg-slate-800': currentSection === index,
               'bg-white': currentSection !== index,
@@ -64,11 +65,16 @@
       :style="{ 'z-index': index === currentSection ? 10 : 5 }"
     >
       <div
+        :aria-label="'Preview de la vidéo : ' + work.aria"
         class="z-40 absolute left-0 ml-5 md:ml-20 transform top-1/2 animate-from-top -translate-y-1/2"
         :id="'section-content-' + index"
       >
         <NuxtLink :to="'/film/' + index">
-          <div id="title" class="flex cursor-pointer animate_underline">
+          <div
+            id="title"
+            class="flex cursor-pointer animate_underline"
+            :aria-label="'titre de la vidéo : ' + work.aria"
+          >
             <h1
               class="z-50 hero glitch layers brandname"
               :data-text="work.brand"
@@ -117,20 +123,17 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, onUnmounted } from "vue";
 import { useProjectsStore } from "@/store/projects";
+
 const projectsStore = useProjectsStore();
 const works = projectsStore.projects.works.data;
 const { $gsap, $Observer } = useNuxtApp();
 
 const currentSection = ref(0);
 const progressHeight = ref(0);
-let autoScrollInterval: number;
-let progressInterval: number;
-let isTransitioning = false;
-let isAnimatingText = false; // Flag to check if text animation is ongoing
+const isTransitioning = ref(false);
+const isAnimatingText = ref(false);
 
-// Variables to store the touch position
-let startY = 0;
-
+// Animation functions
 const animateText = (index: number, direction: string, action: string) => {
   const title = document.querySelector(`#section-content-${index} #title`);
   const production = document.querySelector(
@@ -139,8 +142,8 @@ const animateText = (index: number, direction: string, action: string) => {
   const crew = document.querySelector(`#section-content-${index} #crew`);
 
   const timeline = $gsap.timeline({
-    onStart: () => (isAnimatingText = true), // Set the flag to true when animation starts
-    onComplete: () => (isAnimatingText = false), // Reset the flag when animation completes
+    onStart: () => (isAnimatingText.value = true),
+    onComplete: () => (isAnimatingText.value = false),
   });
 
   if (action === "in") {
@@ -197,23 +200,24 @@ const animateText = (index: number, direction: string, action: string) => {
 };
 
 const animateDots = (index: number) => {
-  const dots = document.querySelectorAll(".dot");
-
-  dots.forEach((dot, dotIndex) => {
-    const isActive = dotIndex === index;
+  document.querySelectorAll(".dot").forEach((dot, i) => {
     $gsap.to(dot, {
-      backgroundColor: isActive ? "#1e293b" : "#ffffff",
+      backgroundColor: i === index ? "#1e293b" : "#ffffff",
       duration: 0.1,
     });
   });
 };
 
+// Navigation functions
 const scrollToSection = (index: number, direction: string) => {
-  if (isTransitioning || index === currentSection.value || isAnimatingText)
+  if (
+    isTransitioning.value ||
+    index === currentSection.value ||
+    isAnimatingText.value
+  )
     return;
 
-  isTransitioning = true;
-
+  isTransitioning.value = true;
   const outTimeline = animateText(currentSection.value, direction, "out");
 
   outTimeline.eventCallback("onComplete", () => {
@@ -241,14 +245,14 @@ const scrollToSection = (index: number, direction: string) => {
       $gsap.to(nextElement, {
         opacity: 1,
         duration: 1,
-        onStart: async () => {
-          animateDots(index); // Appel de l'animation des dots ici
+        onStart: () => {
+          animateDots(index);
           resetAutoScroll();
         },
         onComplete: async () => {
           await nextTick();
           animateText(index, direction, "in");
-          isTransitioning = false;
+          isTransitioning.value = false;
         },
       });
     }
@@ -256,76 +260,54 @@ const scrollToSection = (index: number, direction: string) => {
 };
 
 const nextSection = () => {
-  if (!isAnimatingText) {
-    if (currentSection.value < works.length - 1) {
-      scrollToSection(currentSection.value + 1, "down");
-    } else {
-      scrollToSection(0, "down"); // Scroll back to the first section
-    }
+  if (!isAnimatingText.value) {
+    scrollToSection((currentSection.value + 1) % works.length, "down");
   }
 };
 
 const previousSection = () => {
-  if (!isAnimatingText) {
-    if (currentSection.value > 0) {
-      scrollToSection(currentSection.value - 1, "up");
-    }
+  if (!isAnimatingText.value && currentSection.value > 0) {
+    scrollToSection(currentSection.value - 1, "up");
   }
 };
+
+// Auto-scroll functions
+let autoScrollInterval: number;
+let progressInterval: number;
 
 const resetAutoScroll = () => {
   clearInterval(autoScrollInterval);
   clearInterval(progressInterval);
   progressHeight.value = 0;
-  autoScrollInterval = setInterval(nextSection, 10000);
-  progressInterval = setInterval(() => {
-    if (progressHeight.value < 100) {
-      progressHeight.value += 0.1; // Adjust the speed of progress bar increase
-    }
+  autoScrollInterval = window.setInterval(nextSection, 10000);
+  progressInterval = window.setInterval(() => {
+    progressHeight.value = Math.min(progressHeight.value + 0.1, 100);
   }, 10);
 };
 
-const showLabel = (index: number) => {
-  $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
-};
-
-const hideLabel = (index: number) => {
-  $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
-};
-
-// Handle touch events with touchmove only
-const handleTouchMove = (event: TouchEvent) => {
-  const deltaY = event.touches[0].clientY - startY;
-
-  if (deltaY < -10) {
-    // Swipe up
-    nextSection();
-  } else if (deltaY > 10) {
-    // Swipe down
-    previousSection();
-  }
-};
+// Touch event handlers
+let startY = 0;
 
 const handleTouchStart = (event: TouchEvent) => {
   startY = event.touches[0].clientY;
 };
-function setFullHeight() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh", `${vh}px`);
-}
 
+const handleTouchMove = (event: TouchEvent) => {
+  const deltaY = event.touches[0].clientY - startY;
+  if (Math.abs(deltaY) > 10) {
+    deltaY < 0 ? nextSection() : previousSection();
+  }
+};
+
+// Lifecycle hooks
 onMounted(() => {
-  const sections = document.querySelectorAll("section");
-  sections.forEach((section, index) => {
-    if (index !== currentSection.value) {
-      section.style.display = "none";
-    }
+  document.querySelectorAll("section").forEach((section, index) => {
+    if (index !== currentSection.value) section.style.display = "none";
   });
 
   animateDots(currentSection.value);
   animateText(currentSection.value, "down", "in");
 
-  // Observer for mouse wheel and keyboard scroll
   $Observer.create({
     target: window,
     type: "wheel,scroll",
@@ -335,25 +317,37 @@ onMounted(() => {
     preventDefault: true,
   });
 
-  // Touch events using touchmove
-  window.addEventListener("touchstart", handleTouchStart);
-  window.addEventListener("touchmove", handleTouchMove);
+  window.addEventListener("touchstart", handleTouchStart, { passive: true });
+  window.addEventListener("touchmove", handleTouchMove, { passive: false });
 
   resetAutoScroll();
 
-  // Initial setting
+  const setFullHeight = () =>
+    document.documentElement.style.setProperty(
+      "--vh",
+      `${window.innerHeight * 0.01}px`
+    );
   setFullHeight();
-
-  // Update the height on resize
-  window.addEventListener("resize", setFullHeight);
+  window.addEventListener("resize", setFullHeight, { passive: true });
 });
 
 onUnmounted(() => {
   window.removeEventListener("touchstart", handleTouchStart);
   window.removeEventListener("touchmove", handleTouchMove);
-  window.removeEventListener("resize", setFullHeight);
+  clearInterval(autoScrollInterval);
+  clearInterval(progressInterval);
 });
+
+// Expose necessary variables and functions to the template
+const showLabel = (index: number) => {
+  $gsap.to(`#dot-label-${index}`, { opacity: 1, x: -10, duration: 0.5 });
+};
+
+const hideLabel = (index: number) => {
+  $gsap.to(`#dot-label-${index}`, { opacity: 0, x: 0, duration: 0.5 });
+};
 </script>
+x
 <style scoped>
 .video,
 body,
