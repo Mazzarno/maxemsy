@@ -7,12 +7,10 @@
           class="z-50 flex layer title-font font-medium items-center animate_underline"
         >
           <h2
-            class="hero glitch layers text-lg sm:text-xl tracking-widest font-semibold"
+            class="hero glitch layers text-lg sm:text-xl tracking-widest"
             data-text="Maxime CARO"
           >
-            <span class="text-lg sm:text-xl tracking-widest font-semibold"
-              >Maxime CARO</span
-            >
+            <span class="text-lg sm:text-xl tracking-widest">Maxime CARO</span>
           </h2>
         </NuxtLink>
       </div>
@@ -38,7 +36,7 @@
             </h2>
           </a>
           <p
-            class="text-base text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:mt-0 mt-4 hidden md:flex"
+            class="text-base text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:py-3 sm:mt-0 mt-4 hidden md:flex"
           >
             <a
               class="text-white mt-1"
