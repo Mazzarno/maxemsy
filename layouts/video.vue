@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="absolute top-4  right-4 md:right-20 z-50">
+    <div class="absolute top-4 right-4 md:right-20 z-50">
       <NuxtLink to="/">
         <h2
-          class="hero glitch layers text-white  hover:scale-125 transition-colors duration-300 ease-in-out"
+          class="hero glitch layers text-white hover:scale-125 transition-colors duration-300 ease-in-out"
         >
           <span
-            class="mdi-close mdi mdi-24px text-white  hover:scale-125 transition-colors duration-300 ease-in-out"
+            class="mdi-close mdi mdi-24px text-white hover:scale-125 transition-colors duration-300 ease-in-out"
           ></span>
         </h2>
       </NuxtLink>
@@ -18,10 +18,10 @@
         <div class="md:block z-50 flex layer title-font font-medium">
           <NuxtLink to="/">
             <h2
-              class="hero glitch layers text-lg sm:text-xl tracking-widest font-semibold"
+              class="hero glitch layers text-lg sm:text-xl tracking-widest"
               data-text="Maxime CARO"
             >
-              <span class="text-lg sm:text-xl tracking-widest font-semibold">
+              <span class="text-lg sm:text-xl tracking-widest">
                 Maxime CARO
               </span>
             </h2>
