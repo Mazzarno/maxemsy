@@ -2,6 +2,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles.css", "@mdi/font/css/materialdesignicons.min.css"],
   nitro: { preset: "netlify-edge" },
+    ssr: true,
   modules: [
     "@nuxtjs/tailwindcss",
     "@hypernym/nuxt-gsap",
