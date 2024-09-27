@@ -2,7 +2,7 @@
   <div class="bg-black w-screen h-screen -z-40 snap-y snap-proximity container">
     <!-- Dots Navigation -->
     <div
-      class="fixed top-1/2 right-5 transform -translate-y-1/2 flex flex-col space-y-4 md:space-y-8 z-50"
+      class="fixed top-1/2 right-5 transform -translate-y-1/2 flex flex-col space-y-4 md:space-y-6 z-50"
     >
       <div
         v-for="(work, index) in works.slice(0, 20)"
